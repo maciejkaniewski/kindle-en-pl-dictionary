@@ -21,18 +21,11 @@ each of them an entry of its own.
 
 ## Features
 
-- **108,000 entries** with Polish meanings and example sentences from the
-  Polish and English Wiktionary
-- **Phrasal verbs and idioms** as entries of their own, inflected forms
-  included, so selecting *gave up* opens *give up* and *broke the ice* opens
-  *break the ice*
-- **Inflected forms** like *went*, *children* or *better* open *go*, *child*
-  and *good*
-- **Clear entries** modelled on the Oxford Dictionary of English, with the
-  meanings and examples first and the most common phrasal verbs and idioms of
-  the word after them
-- **Words that are also forms of other words** show both meanings, so *saw*
-  gives *piła* as well as *see*
+- **108,000 entries** with Polish meanings and examples from the Polish and English Wiktionary
+- **Phrasal verbs and idioms** as entries of their own, so *gave up* opens *give up*
+- **Inflected forms** like *went*, *children* or *better* open *go*, *child* and *good*
+- **Clear entries** modelled on the Oxford Dictionary of English, meanings and examples first
+- **Both meanings** of words like *saw*, which is *piła* but also the past tense of *see*
 
 ## More examples
 
@@ -74,11 +67,8 @@ Tried it on another Kindle? Let us know in an [issue](../../issues).
 
 ## Contributing
 
-Found a wrong translation or a missing word? [CONTRIBUTING.md](CONTRIBUTING.md)
-explains how corrections work and how to build the dictionary from source.
+Found a wrong translation or a missing word? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-The dictionary content is licensed under [CC BY-SA 4.0](LICENSE-DATA) and comes
-from Wiktionary (see [ATTRIBUTION.md](ATTRIBUTION.md)). The code is licensed
-under the [MIT License](LICENSE).
+Content from Wiktionary under [CC BY-SA 4.0](LICENSE-DATA) ([attribution](ATTRIBUTION.md)), code under [MIT](LICENSE).
