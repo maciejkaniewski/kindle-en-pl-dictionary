@@ -9,11 +9,11 @@ on:
     paths-ignore: ["**.md", "LICENSE", "LICENSE-DATA"]
   workflow_dispatch:
 
-# Pushes to main and tags queue up instead of cancelling each other: the README
-# badge reports a cancelled run as "failing". Only superseded PR runs are cancelled.
+# Every push and tag gets its own run (a cancelled or superseded run would show
+# the README badge as "failing"); only superseded pull-request runs are cancelled.
 concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.ref) || format('run-{0}', github.run_id) }}
+  cancel-in-progress: true
 
 jobs:
   build:
