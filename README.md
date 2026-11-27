@@ -1,140 +1,91 @@
+<div align="center">
+
 # kindle-en-pl-dictionary
 
-An **English → Polish dictionary for Kindle** e-readers, built from
-[Wiktionary](https://www.wiktionary.org/).
+[![Build](https://github.com/maciejkaniewski/kindle-en-pl-dictionary/actions/workflows/build.yml/badge.svg)](https://github.com/maciejkaniewski/kindle-en-pl-dictionary/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/maciejkaniewski/kindle-en-pl-dictionary?label=release)](https://github.com/maciejkaniewski/kindle-en-pl-dictionary/releases/latest)
+![Entries](https://img.shields.io/badge/entries-108k-2f6f9f)
+![Phrasal verbs](https://img.shields.io/badge/phrasal%20verbs-2k-2f6f9f)
+[![Content license](https://img.shields.io/badge/content-CC%20BY--SA%204.0-lightgrey)](LICENSE-DATA)
+[![Code license](https://img.shields.io/badge/code-MIT-lightgrey)](LICENSE)
 
-> 🇵🇱 Słownik angielsko-polski na czytniki Kindle.
-> [Opis i instrukcja instalacji ↓](#-po-polsku)
+**Learn the phrases, not just the words.**
 
-> **Status: early development.** The full dictionary (108,000 entries,
-> 124,000 inflected forms) builds and passes 171 automated lookup tests. It is
-> now being tested on a Kindle Paperwhite. There is no release yet; it will be
-> published under [Releases](../../releases).
+You read books in English and want to keep learning as you read. Not only new
+words, but also phrasal verbs and idioms like *put up with* or *break the ice*.
+Kindle dictionaries rarely find those, so this English–Polish dictionary gives
+each of them an entry of its own.
+
+<img src="docs/images/hero.png" alt="Looking up “gave”, “broke the ice” and “saw” on a Kindle" width="100%">
+
+</div>
 
 ## Features
 
-- **108,000 entries** with Polish definitions and example sentences from the
+- **108,000 entries** with Polish meanings and example sentences from the
   Polish and English Wiktionary
-- **Inflected forms:** tapping *went*, *children* or *better* opens *go*,
-  *child* and *good*
-- **Phrasal verbs as entries of their own**, inflected forms included:
-  selecting *gave up* opens *give up*
-- **Clean entries in the style of the Oxford Dictionary of English:**
-  meanings with inline examples first, then the most common phrasal verbs and
-  idioms of the word, each with a short translation
-- **Words that are also inflections** show both meanings: *saw* gives *piła*
-  and "→ see"
+- **Phrasal verbs and idioms** as entries of their own, inflected forms
+  included, so selecting *gave up* opens *give up* and *broke the ice* opens
+  *break the ice*
+- **Inflected forms** like *went*, *children* or *better* open *go*, *child*
+  and *good*
+- **Clear entries** modelled on the Oxford Dictionary of English, with the
+  meanings and examples first and the most common phrasal verbs and idioms of
+  the word after them
+- **Words that are also forms of other words** show both meanings, so *saw*
+  gives *piła* as well as *see*
 
-## How lookup works
+## More examples
 
-The Kindle only searches a dictionary's index of headwords and their inflected
-forms. A phrasal verb that appears only inside the entry of its base verb
-cannot be found by selecting it, and the popup rarely shows the end of a long
-entry. This dictionary therefore indexes phrasal verbs on their own and lists
-the most common ones in the verb entry:
+<p align="center">
+  <img src="docs/images/looking-forward-to.png" alt="looking forward to" width="49%">
+  <img src="docs/images/mice.png" alt="mice" width="49%">
+  <img src="docs/images/went.png" alt="went" width="49%">
+  <img src="docs/images/may.png" alt="May" width="49%">
+</p>
 
-| You do on the Kindle | You get |
-|---|---|
-| tap **gave** | *give* (gave, given), with *give up, give back, give in…* in its phrasal-verb section |
-| select **gave up** / **giving up** | the *give up* entry |
-| tap **saw** | *saw* (piła) **and** "→ see (czas przeszły)" |
-| tap **children**, **went**, **woke** | *child*, *go*, *wake* |
+The previews are rendered from the dictionary itself. On a Kindle the font and
+line breaks differ slightly, and long entries continue on the next page of the
+popup.
 
 ## Installation
 
-1. Download `kindle-en-pl-dictionary.mobi` from [Releases](../../releases)
-   (not yet available, see Status).
-2. Connect the Kindle by USB and copy the file into
-   `documents/dictionaries/`. **Do not use Send-to-Kindle**: it converts the
-   file and breaks dictionary lookup.
-3. On the Kindle: **Settings → Language & Dictionaries → Dictionaries →
-   English** → choose *Słownik angielsko-polski (Wiktionary)*.
-4. In an English book, long-press a word, or drag-select a phrasal verb.
+1. Download `kindle-en-pl-dictionary.mobi` from
+   [Releases](../../releases/latest).
+2. Connect the Kindle to your computer with a USB cable and copy the file into
+   `documents/dictionaries/`. Don't use Send to Kindle, because it converts the
+   file and the dictionary stops working.
+3. On the Kindle, open **Settings**, then **Language & Dictionaries** and
+   **Dictionaries**, and choose **Słownik angielsko-polski (Wiktionary)** for
+   **English**.
+4. In an English book, long-press a word, or drag-select a phrasal verb or an
+   idiom.
 
-Recent Paperwhites (2024+) connect over MTP rather than as a USB drive. On
-Linux, use your file manager (gvfs) or `jmtpfs`.
+Kindles from 2024 on connect over MTP instead of as a USB drive. On Windows and
+Linux they show up as a device in the file manager, and on macOS you need an
+MTP app such as [OpenMTP](https://openmtp.ganeshrvel.com/).
 
-## Building from source
+## Check it on your Kindle
 
-Requirements: Linux or macOS, Python 3.10+, `curl`, about 4 GB of disk space.
+Each release also contains `dictionary-test.azw3`, a short English test book.
+Copy it into `documents/`, open it and look up the **bold** words and the
+underlined phrases. Every line says which entry should open.
 
-```sh
-tools/download.sh   # Wiktionary data from kaikki.org (~3.2 GB) + kindling
-make test           # build the full dictionary (~5 min) and run the lookup tests
-```
+## Tested devices
 
-The output is written to `build/full/kindle-en-pl-dictionary.mobi`.
-`make test-pilot` builds a small 32-entry dictionary from `pilot/words.txt`.
+| Device | Firmware | Single words | Phrasal verbs and idioms |
+|---|---|:---:|:---:|
+| Kindle Paperwhite (12th generation, 2024) | 5.20.1 | ✅ | ✅ |
 
-How it works:
+Tried it on another Kindle? Let us know in an [issue](../../issues).
 
-1. `tools/extract.py` reads the kaikki.org Wiktionary extracts: Polish
-   definitions from Polish Wiktionary, English inflected forms and Polish
-   translations from English Wiktionary.
-2. `tools/build.py` merges them per headword, generates the inflections of
-   multi-word verbs, resolves form/headword collisions, writes Kindle OPF/XHTML
-   and compiles a `.mobi` with
-   [kindling](https://github.com/ciscoriordan/kindling).
-3. `tools/check_lookups.py` uses kindling's on-device lookup simulator to check
-   that, for example, *gave up* opens *give up* (`tests/lookups.tsv`).
+## Contributing
 
-## Corrections
-
-The Polish text comes from Wiktionary and is sometimes clumsy. Corrections
-live in [`corrections/polish.tsv`](corrections/polish.tsv), one row per change,
-and are applied at build time once their status is `approved`. Suggestions made
-with the help of AI are marked `ai` and stay `pending` until a person has
-reviewed them.
-
-## Roadmap
-
-- [x] Pilot: 32 entries, phrasal verbs, inflections, collision handling
-- [x] Full build from the complete Wiktionary data (108k entries)
-- [ ] Device test on a Kindle Paperwhite (tap and multi-word selection)
-- [ ] GitHub Actions: build, test and publish releases
-- [ ] Fill gaps for missing phrasal verbs and idioms
-- [ ] Optional: Polish → English, and StarDict for KOReader / Kobo
+Found a wrong translation or a missing word? [CONTRIBUTING.md](CONTRIBUTING.md)
+explains how corrections work and how to build the dictionary from source.
 
 ## License
 
-- **Dictionary content:** [CC BY-SA 4.0](LICENSE-DATA), derived from
-  Wiktionary. See [ATTRIBUTION.md](ATTRIBUTION.md).
-- **Code:** [MIT](LICENSE).
-
----
-
-## 🇵🇱 Po polsku
-
-Słownik angielsko-polski na czytniki Kindle, oparty na danych z polskiego i
-angielskiego Wikisłownika.
-
-### Funkcje
-
-- **108 tys. haseł** z polskimi znaczeniami i przykładami użycia
-- **Formy odmienione:** *went*, *children* czy *better* prowadzą do haseł
-  *go*, *child* i *good*
-- **Czasowniki frazowe jako osobne hasła**, także w formie odmienionej:
-  zaznaczenie *gave up* otwiera hasło *give up*
-- **Przejrzyste hasła wzorowane na Oxford Dictionary of English:** najpierw
-  znaczenia z przykładami, potem najczęstsze czasowniki frazowe i idiomy danego
-  słowa, każdy z krótkim tłumaczeniem
-
-> **Status:** słownik jest na wczesnym etapie. Pełna wersja (108 tys. haseł)
-> jest gotowa i przechodzi automatyczne testy, a teraz sprawdzamy ją na Kindle
-> Paperwhite. Pierwsze wydanie pojawi się w zakładce Releases.
-
-### Instalacja
-
-1. Pobierz plik `kindle-en-pl-dictionary.mobi` z zakładki
-   [Releases](../../releases).
-2. Podłącz czytnik do komputera kablem USB i skopiuj plik do folderu
-   `documents/dictionaries/`. **Nie wysyłaj go przez Send to Kindle**: usługa
-   konwertuje plik i słownik przestaje działać.
-3. Na czytniku wejdź w **Settings → Language & Dictionaries → Dictionaries →
-   English** i wybierz *Słownik angielsko-polski (Wiktionary)*.
-4. Otwórz książkę po angielsku i przytrzymaj palec na słowie albo zaznacz
-   całe wyrażenie, np. *gave up*.
-
-Treść słownika jest udostępniona na licencji CC BY-SA 4.0 (autorzy:
-społeczności polskiego i angielskiego Wikisłownika), a kod źródłowy na
-licencji MIT.
+The dictionary content is licensed under [CC BY-SA 4.0](LICENSE-DATA) and comes
+from Wiktionary (see [ATTRIBUTION.md](ATTRIBUTION.md)). The code is licensed
+under the [MIT License](LICENSE).

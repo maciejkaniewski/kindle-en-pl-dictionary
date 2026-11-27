@@ -88,7 +88,7 @@ class Entry:
         self.blocks = OrderedDict()   # pos -> {"label", "pl": [senses], "en": [senses]}
         self.forms = defaultdict(set)  # form -> set(tag tuples)
         self.form_of = OrderedDict()   # lemma -> set(desc)
-        self.all_forms = []            # every (form, tags) of this lemma, for the header line
+        self.form_sets = []            # forms per Wiktionary record, for the header line
         self.popularity = 0            # languages it is translated into (English Wiktionary)
 
     def has_senses(self):
@@ -155,6 +155,8 @@ def load(records_path, corrections=None):
                 b["en"].extend(r["senses"])
         for form, tags in r["forms"]:
             lemma_forms[r["hw"]].append((form, tuple(tags)))
+        if r["forms"]:
+            e.form_sets.append([(f, tuple(t)) for f, t in r["forms"]])
         for lemma, tags in r["form_of"]:
             form_of_recs.append((r["hw"], lemma, tuple(tags)))
     return entries, lemma_forms, form_of_recs, used
@@ -200,8 +202,10 @@ def merge(entries, lemma_forms, form_of_recs):
         parts = hw.split(" ")
         if len(parts) < 2 or "verb" not in e.blocks:
             continue
-        for form, tags in verb_forms(parts[0], lemma_forms):
-            lemma_forms[hw].append((" ".join([form] + parts[1:]), tags))
+        generated = [(" ".join([form] + parts[1:]), tags) for form, tags in verb_forms(parts[0], lemma_forms)]
+        lemma_forms[hw].extend(generated)
+        if generated and not e.form_sets:
+            e.form_sets.append(generated)
 
     for hw in headwords:
         if " " not in hw:
@@ -221,9 +225,6 @@ def merge(entries, lemma_forms, form_of_recs):
         lemma = re.sub(r"^to ", "", lemma)
         if lemma in headwords and form != lemma:
             form_lemmas[form][lemma].add(tags)
-
-    for lemma in headwords:
-        entries[lemma].all_forms = list(lemma_forms.get(lemma, ()))
 
     # 3. attach forms: plain inflection, or "→ lemma" line on a separate entry
     collisions = 0
@@ -377,20 +378,30 @@ POS_ABBR = {
 
 def header_forms(e, pos):
     """Irregular forms for the part-of-speech line: "(gave, given)", "(l. mn. children)"."""
-    def first(pred):
-        return next((f for f, t in e.all_forms if pred(set(t))), None)
-    if pos == "verb":
-        past = first(lambda t: "past" in t and "participle" not in t)
-        pp = first(lambda t: "past" in t and "participle" in t)
-        if past and pp and not (past.endswith("ed") and pp.endswith("ed")):
-            return f" (<b>{esc(past)}</b>, <b>{esc(pp)}</b>)" if past != pp else f" (<b>{esc(past)}</b>)"
-    elif pos == "noun":
-        verbal = {"past", "present", "participle", "first-person", "second-person", "third-person", "subjunctive"}
-        pl = first(lambda t: "plural" in t and not t & verbal)  # not "past plural" of old verb tables
-        hw = e.hw
-        regular = {hw + "s", hw + "es"} | ({hw[:-1] + "ies"} if hw.endswith("y") else set())
-        if pl and pl not in regular:
-            return f" (l. mn. <b>{esc(pl)}</b>)"
+    # Forms are taken from one Wiktionary record at a time: "may" (might) and the
+    # rare verb "may" (mayed) must not be mixed into "(might, mayed)".
+    def first(forms, pred):
+        return next((f for f, t in forms if pred(set(t))), None)
+
+    def regular(f):  # "looked forward to" is regular: check the verb, not the particle
+        return f.split(" ")[0].endswith("ed")
+    verbal = {"past", "present", "participle", "first-person", "second-person", "third-person", "subjunctive"}
+    hw = e.hw
+    for forms in e.form_sets:
+        if pos == "verb":
+            past = first(forms, lambda t: "past" in t and "participle" not in t)
+            pp = first(forms, lambda t: "past" in t and "participle" in t)
+            if past and pp:
+                if regular(past) and regular(pp):
+                    return ""
+                return f" (<b>{esc(past)}</b>, <b>{esc(pp)}</b>)"
+            if past and not regular(past):  # modal verbs: may (might), can (could)
+                return f" (<b>{esc(past)}</b>)"
+        elif pos == "noun":
+            pl = first(forms, lambda t: "plural" in t and not t & verbal)  # not "past plural" of old verb tables
+            if pl:
+                regular_pl = {hw + "s", hw + "es"} | ({hw[:-1] + "ies"} if hw.endswith("y") else set())
+                return "" if pl in regular_pl else f" (l. mn. <b>{esc(pl)}</b>)"
     return ""
 
 

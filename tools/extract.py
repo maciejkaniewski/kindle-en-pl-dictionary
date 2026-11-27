@@ -133,8 +133,8 @@ def labels_from(tags, raw_tags=()):
 
 
 def clean_form(form, hw, tags):
-    if not form or form == hw or form == "-":
-        return None
+    if not form or form == "-":
+        return None  # forms equal to the headword are kept: "put (put, put)"
     if set(tags) & BAD_FORM_TAGS:
         return None
     if form.startswith(("more ", "most ")) or any(c in form for c in "()[]/,;"):
