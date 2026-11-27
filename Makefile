@@ -5,10 +5,13 @@ PLWIKT   ?= data/raw/pl-extract.jsonl.gz
 # The smaller kaikki-English.jsonl.gz extract also works but is deprecated upstream.
 ENWIKT   ?= data/raw/raw-wiktextract-data.jsonl.gz
 
+# Shown in the dictionary title on the Kindle; CI sets it to the release tag (e.g. v0.1.1).
+DICT_VERSION ?= dev
+
 PILOT := build/pilot
 FULL  := build/full
 
-.PHONY: all download pilot test-pilot full test test-book clean
+.PHONY: all download pilot test-pilot full test test-book clean FORCE
 
 all: test
 
@@ -34,9 +37,13 @@ $(FULL)/records.jsonl: tools/extract.py $(PLWIKT) $(ENWIKT)
 	@mkdir -p $(FULL)
 	$(PYTHON) tools/extract.py --plwikt $(PLWIKT) --enwikt $(ENWIKT) -o $@
 
-$(FULL)/kindle-en-pl-dictionary.mobi: $(FULL)/records.jsonl tools/build.py tools/corrections.py corrections/polish.tsv
+$(FULL)/version: FORCE
+	@mkdir -p $(FULL)
+	@echo '$(DICT_VERSION)' | cmp -s - $@ || echo '$(DICT_VERSION)' > $@
+
+$(FULL)/kindle-en-pl-dictionary.mobi: $(FULL)/records.jsonl $(FULL)/version tools/build.py tools/corrections.py corrections/polish.tsv
 	$(PYTHON) tools/build.py $< --outdir $(FULL)/src \
-	  --title "Słownik angielsko-polski (frazy i idiomy)" \
+	  --version $(DICT_VERSION) \
 	  --kindling $(KINDLING) -o $@
 
 full: $(FULL)/kindle-en-pl-dictionary.mobi

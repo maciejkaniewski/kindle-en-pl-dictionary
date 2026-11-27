@@ -63,7 +63,7 @@ def case_html(sentence, selected, entry):
             + html.escape(sentence[i + len(selected):]))
     return (f'<div class="case"><div class="book">{book}</div><div class="card">'
             f'<div class="entry">{entry}</div>'
-            f'<div class="foot">Słownik angielsko-polski (frazy i idiomy)</div></div></div>')
+            f'<div class="foot">kindle-en-pl-dictionary</div></div></div>')
 
 
 def render(chrome, page, png, width, tmp):

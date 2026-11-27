@@ -538,8 +538,10 @@ def write_package(outdir, title, entries_html, meta):
     flush()
 
     today = meta["date"]
+    version = meta["version"].removeprefix("v")
+    version_line = f"Wersja z dnia {today}." if version == "dev" else f"Wersja {esc(version)} z dnia {today}."
     with open(os.path.join(outdir, "usage.html"), "w", encoding="utf-8") as f:
-        f.write(XHTML_HEAD.format(title="Jak korzystać ze słownika") + f"""<h1>{esc(title)}</h1>
+        f.write(XHTML_HEAD.format(title="Jak korzystać ze słownika") + f"""<h1>Słownik angielsko-polski (frazy i idiomy)</h1>
 <p>Słownik angielsko-polski oparty na otwartych danych z polskiego i angielskiego Wikisłownika (pl.wiktionary.org, en.wiktionary.org).</p>
 <h2>Jak korzystać ze słownika</h2>
 <p><b>Pojedyncze słowa.</b> Przytrzymaj palec na słowie. Formy odmienione, np. <i>gave</i>, <i>went</i> czy <i>children</i>, prowadzą do hasła z formą podstawową.</p>
@@ -561,7 +563,7 @@ def write_package(outdir, title, entries_html, meta):
 <p>Dane z obu serwisów wyodrębniono narzędziem Wiktextract (kaikki.org): Tatu Ylonen, „Wiktextract: Wiktionary as Machine-Readable Structured Data”, LREC 2022.</p>
 <h2>Zmiany</h2>
 <p>Hasła z obu źródeł zostały wybrane, połączone i na nowo sformatowane. Dodano angielskie formy odmienione, odsyłacze (np. <i>saw</i> → <i>see</i>), listy czasowników frazowych i idiomów oraz poprawki błędów w polskich przykładach.</p>
-<p>Wersja z dnia {today}. Strona projektu: https://github.com/maciejkaniewski/kindle-en-pl-dictionary (kod źródłowy na licencji MIT).</p>
+<p>{version_line} Strona projektu: https://github.com/maciejkaniewski/kindle-en-pl-dictionary (kod źródłowy na licencji MIT).</p>
 <p>Projekt nie jest powiązany z Wikimedia Foundation ani z Amazon. Wiktionary i Wikisłownik są znakami towarowymi Wikimedia Foundation, a Kindle jest znakiem towarowym Amazon.com, Inc.</p>
 </body></html>
 """)
@@ -627,7 +629,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("records", help="records JSONL from extract.py")
     ap.add_argument("--outdir", required=True, help="directory for the OPF/XHTML source")
-    ap.add_argument("--title", default="Słownik angielsko-polski (frazy i idiomy)")
+    ap.add_argument("--version", default="dev", help="release version, e.g. v0.1.1 (shown on the licence page)")
+    ap.add_argument("--title", help="title shown on the Kindle (default: kindle-en-pl-dictionary VERSION)")
     ap.add_argument("--identifier", default="kindle-en-pl-dictionary")
     ap.add_argument("--publisher", default="kindle-en-pl-dictionary")
     ap.add_argument("--corrections", default=os.path.join(os.path.dirname(__file__), "..", "corrections", "polish.tsv"),
@@ -649,8 +652,9 @@ def main():
     htmls = [render_entry(final[hw], final, phrasal_of, expr_of, by_lower)
              for hw in sorted(final, key=lambda h: (h.lower(), h))]
     meta = {"date": datetime.date.today().isoformat(), "identifier": args.identifier,
-            "publisher": args.publisher}
-    opf = write_package(args.outdir, args.title, htmls, meta)
+            "publisher": args.publisher, "version": args.version}
+    title = args.title or f"kindle-en-pl-dictionary {args.version}"
+    opf = write_package(args.outdir, title, htmls, meta)
 
     n_forms = sum(len(e.forms) for e in final.values())
     print(f"entries: {len(final)}  inflected forms: {n_forms}  collision/form entries: {collisions}  "
@@ -659,6 +663,7 @@ def main():
 
     stats = {
         "date": meta["date"],
+        "version": args.version,
         "entries": len(final),
         "inflected_forms": n_forms,
         "phrasal_verbs": sum(1 for e in final.values() if e.phrasal),

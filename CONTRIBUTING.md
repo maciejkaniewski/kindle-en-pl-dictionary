@@ -70,4 +70,6 @@ How the build works:
 
 GitHub Actions builds the dictionary and runs the tests on every push. Pushing
 a tag such as `v0.1.0` publishes a release with the dictionary and the test
-book attached.
+book attached. The tag becomes part of the dictionary name on the Kindle
+(`kindle-en-pl-dictionary v0.1.0`); local builds are named
+`kindle-en-pl-dictionary dev` unless you run `make test DICT_VERSION=v0.1.0`.
