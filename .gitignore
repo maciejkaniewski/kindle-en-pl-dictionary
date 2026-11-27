@@ -1,0 +1,19 @@
+# Never commit purchased / third-party dictionaries (copyrighted).
+# Our own builds live in build/ and are published via GitHub Releases.
+*.mobi
+*.azw
+*.azw3
+*.kfx
+*.prc
+
+# Downloaded source data (large; fetched by tools/download.sh)
+data/raw/
+
+# Build output and local tool binaries
+build/
+bin/
+
+# Python
+__pycache__/
+*.pyc
+.venv/

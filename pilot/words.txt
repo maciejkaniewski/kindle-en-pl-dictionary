@@ -1,0 +1,44 @@
+# Pilot word list: a small dictionary to verify the whole chain on a real Kindle.
+# Inflected forms (gave, went, gave up, ...) are added automatically.
+
+# give + its phrasal verbs (tap "gave" -> give; select "gave up" -> give up)
+give
+give up
+give in
+give away
+give back
+give out
+
+# frequent irregular verbs and phrasal verbs
+go
+take
+take off
+look
+look after
+look forward to
+put
+put up with
+run
+run into
+get
+get over
+turn
+turn down
+break
+break down
+wake
+wake up
+
+# headword vs inflection collisions: "saw" (piła / past of see), "left" (lewy / past of leave)
+see
+saw
+leave
+left
+
+# irregular plural, multi-word expression, idiom
+child
+each other
+break the ice
+
+# polysemy that matters in The Hunger Games
+bow

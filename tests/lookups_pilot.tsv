@@ -1,0 +1,37 @@
+# query	expected headword ("-" = must not resolve)
+# single-word inflections
+gave	give
+given	give
+went	go
+gone	go
+took	take
+children	child
+woke	wake
+bowed	bow
+# phrasal verbs, base and inflected (multi-word selection)
+give up	give up
+gave up	give up
+giving up	give up
+gives up	give up
+Gave up	give up
+woke up	wake up
+took off	take off
+looked after	look after
+looked forward to	look forward to
+put up with	put up with
+putting up with	put up with
+ran into	run into
+got over	get over
+turned down	turn down
+broke down	break down
+# idiom
+broke the ice	break the ice
+# collisions: headword that is also an inflection of another verb.
+# "saw" must open its own entry (which starts with "→ see"), not the see entry.
+saw	!see
+left	!leave
+# multi-word expression
+each other	each other
+# must not hijack particles or match split phrasal verbs
+up	-
+gave it up	-
