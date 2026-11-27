@@ -21,7 +21,7 @@ $(PILOT)/records.jsonl: pilot/words.txt tools/extract.py $(PLWIKT) $(ENWIKT)
 
 $(PILOT)/en-pl-pilot.mobi: $(PILOT)/records.jsonl tools/build.py tools/corrections.py corrections/polish.tsv
 	$(PYTHON) tools/build.py $< --outdir $(PILOT)/src \
-	  --title "Słownik angielsko-polski (Wiktionary) – PILOT" \
+	  --title "Słownik angielsko-polski (frazy i idiomy) – PILOT" \
 	  --identifier kindle-en-pl-dictionary-pilot \
 	  --kindling $(KINDLING) -o $@
 
@@ -36,7 +36,7 @@ $(FULL)/records.jsonl: tools/extract.py $(PLWIKT) $(ENWIKT)
 
 $(FULL)/kindle-en-pl-dictionary.mobi: $(FULL)/records.jsonl tools/build.py tools/corrections.py corrections/polish.tsv
 	$(PYTHON) tools/build.py $< --outdir $(FULL)/src \
-	  --title "Słownik angielsko-polski (Wiktionary)" \
+	  --title "Słownik angielsko-polski (frazy i idiomy)" \
 	  --kindling $(KINDLING) -o $@
 
 full: $(FULL)/kindle-en-pl-dictionary.mobi

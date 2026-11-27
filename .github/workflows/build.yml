@@ -73,7 +73,9 @@ jobs:
           print("Copy `kindle-en-pl-dictionary.mobi` to `documents/dictionaries/` on the Kindle over USB "
                 "and choose it as the English dictionary in Language & Dictionaries settings. "
                 "`dictionary-test.azw3` is a short English test book for checking it. "
-                "See the README for details.")
+                "See the README for details.\n")
+          print("The dictionary content comes from Wiktionary and is licensed under CC BY-SA 4.0 "
+                "(see ATTRIBUTION.md).")
           EOF
           gh release create "$TAG" build/full/kindle-en-pl-dictionary.mobi build/device/dictionary-test.azw3 \
             --title "$TAG" --notes-file notes.md

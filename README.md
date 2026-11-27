@@ -72,3 +72,7 @@ Found a wrong translation or a missing word? See [CONTRIBUTING.md](CONTRIBUTING.
 ## License
 
 Content from Wiktionary under [CC BY-SA 4.0](LICENSE-DATA) ([attribution](ATTRIBUTION.md)), code under [MIT](LICENSE).
+
+Thanks to the Wiktionary communities, [kaikki.org](https://kaikki.org/) and [kindling](https://github.com/ciscoriordan/kindling).
+
+Not affiliated with Amazon, the Wikimedia Foundation or Oxford University Press.

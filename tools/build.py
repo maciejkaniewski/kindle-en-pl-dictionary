@@ -557,10 +557,12 @@ def write_package(outdir, title, entries_html, meta):
 <h2>Źródła</h2>
 <p>• Polski Wikisłownik (pl.wiktionary.org) – autorzy: społeczność Wikisłownika</p>
 <p>• Angielski Wikisłownik (en.wiktionary.org) – autorzy: społeczność Wiktionary</p>
+<p>Każde hasło pochodzi ze stron o tym samym tytule, np. https://pl.wiktionary.org/wiki/give i https://en.wiktionary.org/wiki/give. Historia każdej strony zawiera pełną listę jej autorów.</p>
 <p>Dane z obu serwisów wyodrębniono narzędziem Wiktextract (kaikki.org): Tatu Ylonen, „Wiktextract: Wiktionary as Machine-Readable Structured Data”, LREC 2022.</p>
 <h2>Zmiany</h2>
-<p>Hasła z obu źródeł zostały wybrane, połączone i na nowo sformatowane. Dodano angielskie formy odmienione, odsyłacze (np. <i>saw</i> → <i>see</i>) oraz listy czasowników frazowych.</p>
+<p>Hasła z obu źródeł zostały wybrane, połączone i na nowo sformatowane. Dodano angielskie formy odmienione, odsyłacze (np. <i>saw</i> → <i>see</i>), listy czasowników frazowych i idiomów oraz poprawki błędów w polskich przykładach.</p>
 <p>Wersja z dnia {today}. Strona projektu: https://github.com/maciejkaniewski/kindle-en-pl-dictionary (kod źródłowy na licencji MIT).</p>
+<p>Projekt nie jest powiązany z Wikimedia Foundation ani z Amazon. Wiktionary i Wikisłownik są znakami towarowymi Wikimedia Foundation, a Kindle jest znakiem towarowym Amazon.com, Inc.</p>
 </body></html>
 """)
 
@@ -625,7 +627,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("records", help="records JSONL from extract.py")
     ap.add_argument("--outdir", required=True, help="directory for the OPF/XHTML source")
-    ap.add_argument("--title", default="Słownik angielsko-polski (Wiktionary)")
+    ap.add_argument("--title", default="Słownik angielsko-polski (frazy i idiomy)")
     ap.add_argument("--identifier", default="kindle-en-pl-dictionary")
     ap.add_argument("--publisher", default="kindle-en-pl-dictionary")
     ap.add_argument("--corrections", default=os.path.join(os.path.dirname(__file__), "..", "corrections", "polish.tsv"),
