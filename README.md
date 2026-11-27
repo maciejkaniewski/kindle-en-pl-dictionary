@@ -6,8 +6,7 @@
 [![Release](https://img.shields.io/github/v/release/maciejkaniewski/kindle-en-pl-dictionary?label=release)](https://github.com/maciejkaniewski/kindle-en-pl-dictionary/releases/latest)
 ![Entries](https://img.shields.io/badge/entries-108k-2f6f9f)
 ![Phrasal verbs](https://img.shields.io/badge/phrasal%20verbs-2k-2f6f9f)
-[![Content license](https://img.shields.io/badge/content-CC%20BY--SA%204.0-lightgrey)](LICENSE-DATA)
-[![Code license](https://img.shields.io/badge/code-MIT-lightgrey)](LICENSE)
+[![License](https://img.shields.io/badge/license-CC%20BY--SA%204.0%20%2B%20MIT-lightgrey)](#license)
 
 **Learn the phrases, not just the words.**
 
