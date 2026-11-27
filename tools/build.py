@@ -537,6 +537,17 @@ def main():
           f"base words with phrasal list: {len(phrasal_of)}", file=sys.stderr)
     print(f"source: {opf}", file=sys.stderr)
 
+    stats = {
+        "date": meta["date"],
+        "entries": len(final),
+        "inflected_forms": n_forms,
+        "phrasal_verbs": sum(1 for e in final.values() if e.phrasal),
+        "corrections_applied": len(used),
+    }
+    with open(os.path.join(args.outdir, "stats.json"), "w", encoding="utf-8") as f:
+        json.dump(stats, f, indent=2)
+        f.write("\n")
+
     if args.kindling:
         out = args.output or os.path.join(args.outdir, "dictionary.mobi")
         res = subprocess.run([args.kindling, "build", opf, "-o", out], capture_output=True, text=True)
