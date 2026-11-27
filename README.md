@@ -49,16 +49,10 @@ popup.
 
 ## Installation
 
-1. Download `kindle-en-pl-dictionary.mobi` from
-   [Releases](../../releases/latest).
-2. Connect the Kindle to your computer with a USB cable and copy the file into
-   `documents/dictionaries/`. Don't use Send to Kindle, because it converts the
-   file and the dictionary stops working.
-3. On the Kindle, open **Settings**, then **Language & Dictionaries** and
-   **Dictionaries**, and choose **Słownik angielsko-polski (Wiktionary)** for
-   **English**.
-4. In an English book, long-press a word, or drag-select a phrasal verb or an
-   idiom.
+1. Download `kindle-en-pl-dictionary.mobi` from [Releases](../../releases/latest).
+2. Copy it to `documents/dictionaries/` on the Kindle over USB, not via Send to Kindle.
+3. In **Language & Dictionaries** settings, choose it as the **English** dictionary.
+4. Long-press a word in an English book, or select a whole phrasal verb or idiom.
 
 Kindles from 2024 on connect over MTP instead of as a USB drive. On Windows and
 Linux they show up as a device in the file manager, and on macOS you need an
