@@ -65,16 +65,15 @@ jobs:
           python3 -I - > notes.md <<'EOF'
           import json
           s = json.load(open("build/full/stats.json"))
-          print(f"English → Polish dictionary for Kindle, built from Wiktionary data on {s['date']}.\n")
+          print(f"English-Polish dictionary for Kindle, built from Wiktionary data on {s['date']}.\n")
           print(f"- {s['entries']:,} entries")
           print(f"- {s['inflected_forms']:,} inflected forms")
           print(f"- {s['phrasal_verbs']:,} phrasal verbs")
           print(f"- {s['corrections_applied']:,} reviewed corrections of Polish text\n")
-          print("Installation: copy `kindle-en-pl-dictionary.mobi` to `documents/dictionaries/` "
-                "on the Kindle over USB, then choose it under Settings → Language & Dictionaries "
-                "→ Dictionaries → English. See the README for details.\n")
-          print("`dictionary-test.azw3` is a short English test book: copy it to `documents/` "
-                "and look up the bold words and underlined phrases to check the dictionary.")
+          print("Copy `kindle-en-pl-dictionary.mobi` to `documents/dictionaries/` on the Kindle over USB "
+                "and choose it as the English dictionary in Language & Dictionaries settings. "
+                "`dictionary-test.azw3` is a short English test book for checking it. "
+                "See the README for details.")
           EOF
           gh release create "$TAG" build/full/kindle-en-pl-dictionary.mobi build/device/dictionary-test.azw3 \
             --title "$TAG" --notes-file notes.md
