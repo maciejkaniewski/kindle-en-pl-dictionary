@@ -47,7 +47,7 @@ jobs:
           name: kindle-en-pl-dictionary
           path: |
             build/full/kindle-en-pl-dictionary.mobi
-            build/full/src/stats.json
+            build/full/stats.json
           retention-days: 14
 
       - name: Publish release
@@ -58,7 +58,7 @@ jobs:
         run: |
           python3 -I - > notes.md <<'EOF'
           import json
-          s = json.load(open("build/full/src/stats.json"))
+          s = json.load(open("build/full/stats.json"))
           print(f"English → Polish dictionary for Kindle, built from Wiktionary data on {s['date']}.\n")
           print(f"- {s['entries']:,} entries")
           print(f"- {s['inflected_forms']:,} inflected forms")

@@ -19,7 +19,7 @@ $(PILOT)/records.jsonl: pilot/words.txt tools/extract.py $(PLWIKT) $(ENWIKT)
 	@mkdir -p $(PILOT)
 	$(PYTHON) tools/extract.py --plwikt $(PLWIKT) --enwikt $(ENWIKT) --words pilot/words.txt -o $@
 
-$(PILOT)/en-pl-pilot.mobi: $(PILOT)/records.jsonl tools/build.py
+$(PILOT)/en-pl-pilot.mobi: $(PILOT)/records.jsonl tools/build.py tools/corrections.py corrections/polish.tsv
 	$(PYTHON) tools/build.py $< --outdir $(PILOT)/src \
 	  --title "Słownik angielsko-polski (Wiktionary) – PILOT" \
 	  --identifier kindle-en-pl-dictionary-pilot \
@@ -34,7 +34,7 @@ $(FULL)/records.jsonl: tools/extract.py $(PLWIKT) $(ENWIKT)
 	@mkdir -p $(FULL)
 	$(PYTHON) tools/extract.py --plwikt $(PLWIKT) --enwikt $(ENWIKT) -o $@
 
-$(FULL)/kindle-en-pl-dictionary.mobi: $(FULL)/records.jsonl tools/build.py
+$(FULL)/kindle-en-pl-dictionary.mobi: $(FULL)/records.jsonl tools/build.py tools/corrections.py corrections/polish.tsv
 	$(PYTHON) tools/build.py $< --outdir $(FULL)/src \
 	  --title "Słownik angielsko-polski (Wiktionary)" \
 	  --kindling $(KINDLING) -o $@

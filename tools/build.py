@@ -544,7 +544,9 @@ def main():
         "phrasal_verbs": sum(1 for e in final.values() if e.phrasal),
         "corrections_applied": len(used),
     }
-    with open(os.path.join(args.outdir, "stats.json"), "w", encoding="utf-8") as f:
+    # next to the source dir, not inside it (kindling flags undeclared files)
+    stats_path = os.path.join(os.path.dirname(os.path.abspath(args.outdir)), "stats.json")
+    with open(stats_path, "w", encoding="utf-8") as f:
         json.dump(stats, f, indent=2)
         f.write("\n")
 
