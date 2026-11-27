@@ -31,7 +31,7 @@ POS_PL = {
     "adv": "przysłówek", "prep": "przyimek", "pron": "zaimek",
     "conj": "spójnik", "intj": "wykrzyknik", "det": "określnik",
     "num": "liczebnik", "particle": "partykuła", "phrase": "wyrażenie",
-    "prep_phrase": "wyrażenie przyimkowe", "proverb": "przysłowie",
+    "prep_phrase": "wyrażenie przyimkowe", "proverb": "przysłowie", "adv_phrase": "wyrażenie przysłówkowe",
     "article": "przedimek", "contraction": "forma ściągnięta",
     "abbrev": "skrót", "name": "nazwa własna",
 }
@@ -43,14 +43,29 @@ LABELS_PL = {
     "British": "bryt.", "UK": "bryt.", "US": "amer.", "slang": "slang",
     "metaphoric": "przen.", "figuratively": "przen.", "dated": "przest.",
     "obsolete": "daw.", "vulgar": "wulg.", "rare": "rzad.",
-    "pejorative": "pej.", "derogatory": "pej.", "literary": "lit.",
-    "offensive": "obraź.", "humorous": "żart.", "poetic": "poet.",
+    "pejorative": "pejor.", "derogatory": "pejor.", "literary": "książk.",
+    "offensive": "obraźl.", "humorous": "żart.", "poetic": "poet.",
     "formal": "form.", "euphemistic": "eufem.", "Canadian-English": "kanad.",
     "Irish": "irl.", "archaic": "arch.", "dialectal": "gw.",
     "diminutive": "zdrobn.", "childish": "dziec.", "ironic": "iron.",
     "Biblical": "bibl.", "neologism": "neol.", "literally": "dosł.",
-    "Australian": "austral.", "Scotland": "szkoc.",
+    "Australian": "austral.", "Scotland": "szkoc.", "officially": "oficj.",
 }
+
+# Polish Wiktionary abbreviates phrase types ("fraza rzeczownikowa" -> "rzeczownikowa").
+PL_POS_FIX = {
+    "rzeczownikowa": "wyrażenie rzeczownikowe", "przymiotnikowa": "wyrażenie przymiotnikowe",
+    "przysłówkowa": "wyrażenie przysłówkowe", "wykrzyknikowa": "wyrażenie wykrzyknikowe",
+    "przyimkowa": "wyrażenie przyimkowe", "czasownikowa": "wyrażenie czasownikowe",
+    "liczebnikowa": "wyrażenie liczebnikowe", "partykułowa": "wyrażenie partykułowe",
+    "fraza": "wyrażenie", "przysłowie angielskie": "przysłowie",
+}
+
+# Parts of speech we leave out: affixes, letters, symbols.
+SKIP_POS_PL = {"przedrostek", "przyrostek", "międzyrostek", "słowotwórczy",
+               "litera", "symbol", "znak interpunkcyjny", "unknown", "czasownika", "zaimka"}
+SKIP_POS_EN = {"prefix", "suffix", "infix", "interfix", "affix", "circumfix",
+               "character", "symbol", "punct", "romanization"}
 
 # Inflected-form tags we never index (spelling variants, dead forms, template noise).
 BAD_FORM_TAGS = {
@@ -78,6 +93,20 @@ PL_FORM_GLOSS = re.compile(
 
 # Words in English Wiktionary translation entries sometimes carry aspect markers.
 ASPECT = re.compile(r"\s+\b(impf|pf)\b\.?\s*")
+
+
+def fix_parens(text):
+    """Repair brackets lost in extraction: "On) podarł" -> "(On) podarł"."""
+    text = text.strip()
+    if text.count(")") == text.count("(") + 1 and text.find(")") < (text.find("(") % (len(text) + 1)):
+        text = "(" + text
+    if text.count("(") == text.count(")") + 1 and text.rfind("(") > text.rfind(")"):
+        text = text + ")"
+    if text.count('"') % 2 == 1 and not text.startswith('"') and 0 < text.find('"') < 40:
+        text = '"' + text  # 'Allah" jest ...' -> '"Allah" jest ...'
+    if text.count("\u201d") > text.count("\u201c") + text.count("\u201e") and 0 < text.find("\u201d") < 40:
+        text = "\u201e" + text  # 'Allah” jest' -> '„Allah” jest'
+    return text
 
 
 def open_text(path):
@@ -127,15 +156,18 @@ def extract_plwikt(path, wanted):
             if not hw or (wanted is not None and hw not in wanted):
                 continue
             pos_label = d.get("pos_title") or POS_PL.get(d.get("pos"), d.get("pos") or "")
-            if pos_label == "nazwa własna":
-                continue  # proper names: skip for now
+            if pos_label in SKIP_POS_PL:
+                continue
+            pos_label = PL_POS_FIX.get(pos_label, pos_label)
             senses, form_of = [], []
             for s in d.get("senses", []):
-                glosses = [g.strip() for g in s.get("glosses", []) if g.strip()]
+                glosses = [fix_parens(g) for g in s.get("glosses", []) if g.strip()]
                 if not glosses:
                     continue
                 gloss = "; ".join(glosses)
                 if s.get("form_of") or PL_FORM_GLOSS.match(gloss):
+                    if set(s.get("tags", [])) & BAD_FORM_TAGS:
+                        continue  # e.g. "went" as obsolete past tense of "wend"
                     for fo in s.get("form_of") or ():
                         lemma = re.sub(r"^to ", "", fo.get("word", ""))
                         if lemma:
@@ -144,7 +176,7 @@ def extract_plwikt(path, wanted):
                 examples = []
                 for ex in s.get("examples", [])[:2]:
                     if ex.get("text") and ex.get("translation"):
-                        examples.append([ex["text"].strip(), ex["translation"].strip()])
+                        examples.append([fix_parens(ex["text"]), fix_parens(ex["translation"])])
                 senses.append({
                     "gloss": gloss,
                     "labels": labels_from(s.get("tags"), s.get("raw_tags")),
@@ -173,7 +205,7 @@ def extract_enwikt(path, wanted):
             hw = d.get("word")
             if not hw or (wanted is not None and hw not in wanted):
                 continue
-            if d.get("lang_code", "en") != "en" or d.get("pos") == "name":
+            if d.get("lang_code", "en") != "en" or d.get("pos") in SKIP_POS_EN:
                 continue
 
             forms = []
@@ -201,7 +233,12 @@ def extract_enwikt(path, wanted):
                 if t.get("lang_code") != "pl" or not t.get("word"):
                     continue
                 word = ASPECT.sub(" / ", t["word"].strip()).strip(" /")
+                word = re.sub(r"^(but )?see\s+", "", word)  # leaked "but see" cross-references
+                if not word:
+                    continue
                 key = (t.get("sense") or "").strip()
+                if key.lower().startswith("translations"):
+                    key = ""  # table without its own gloss heading
                 g = groups.setdefault(key, {"words": [], "labels": []})
                 if word not in g["words"]:
                     g["words"].append(word)

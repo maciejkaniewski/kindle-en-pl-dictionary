@@ -1,0 +1,191 @@
+# Lookup tests for the full dictionary (run with --src, see tools/check_lookups.py)
+# query	expected headword ("-" = must not resolve, "!x" = must resolve but not to x)
+
+# --- irregular verbs: past tense and past participle -> base form
+was	be
+were	be
+been	be
+began	begin
+begun	begin
+bit	bite
+bitten	bite
+blew	blow
+brought	bring
+built	build
+bought	buy
+caught	catch
+chose	choose
+chosen	choose
+came	come
+dug	dig
+did	do
+done	do
+drew	draw
+drank	drink
+drunk	drink
+drove	drive
+driven	drive
+ate	eat
+eaten	eat
+fell	fall
+fallen	fall
+fed	feed
+felt	feel
+fought	fight
+found	find
+flew	fly
+flown	fly
+forgot	forget
+forgotten	forget
+froze	freeze
+frozen	freeze
+gave	give
+given	give
+went	go
+gone	go
+grew	grow
+grown	grow
+hung	hang
+had	have
+heard	hear
+hid	hide
+hidden	hide
+held	hold
+kept	keep
+knew	know
+known	know
+led	lead
+lay	lie
+lost	lose
+made	make
+meant	mean
+met	meet
+paid	pay
+rode	ride
+rang	ring
+rose	rise
+risen	rise
+said	say
+saw	see
+seen	see
+sold	sell
+sent	send
+shook	shake
+shot	shoot
+sang	sing
+sank	sink
+sat	sit
+slept	sleep
+spoke	speak
+spoken	speak
+spent	spend
+stood	stand
+stole	steal
+stolen	steal
+swam	swim
+taught	teach
+tore	tear
+told	tell
+thought	think
+threw	throw
+thrown	throw
+took	take
+taken	take
+woke	wake
+wore	wear
+won	win
+wrote	write
+written	write
+
+# --- regular inflections, plurals, comparison
+looked	look
+looking	look
+tries	try
+tried	try
+children	child
+women	woman
+mice	mouse
+better	good
+worst	bad
+bigger	big
+
+# --- phrasal verbs: base, past, -ing, 3rd person
+give up	give up
+gave up	give up
+giving up	give up
+gives up	give up
+woke up	wake up
+took off	take off
+looked after	look after
+looked forward to	look forward to
+put up with	put up with
+putting up with	put up with
+ran into	run into
+got over	get over
+turned down	turn down
+broke down	break down
+came across	come across
+found out	find out
+picked up	pick up
+set off	set off
+turned out	turn out
+carried on	carry on
+brought up	bring up
+called off	call off
+figured out	figure out
+got along	get along
+got up	get up
+grew up	grow up
+held on	hold on
+let down	let down
+made up	make up
+passed away	pass away
+pointed out	point out
+put off	put off
+set up	set up
+showed up	show up
+shut up	shut up
+sat down	sit down
+stood up	stand up
+took over	take over
+threw away	throw away
+went on	go on
+ran away	run away
+broke up	break up
+calmed down	calm down
+cheered up	cheer up
+ended up	end up
+hung up	hang up
+looked up	look up
+slowed down	slow down
+split up	split up
+turned up	turn up
+worked out	work out
+
+# --- idioms and placeholders ("one's" expands to my/his/her/...)
+broke the ice	break the ice
+made up my mind	make up one's mind
+make up her mind	make up one's mind
+
+# --- collisions: words that are also inflections of another word
+saw	!see
+left	!leave
+
+# --- case: proper nouns and sentence-initial capitals
+January	January
+France	France
+May	may
+Polish	polish
+
+# --- multi-word expressions
+each other	each other
+of course	of course
+
+# --- particles must open their own entry, never a phrasal verb
+up	!give up
+gave it up	-
+
+# --- folded capitalised meanings appear near the top of the entry
+Polish	~<b>Polish</b> <i>(przymiotnik)</i>: polski
+May	~<b>May</b> <i>(nazwa własna)</i>: maj
+march	~<b>March</b> <i>(nazwa własna)</i>

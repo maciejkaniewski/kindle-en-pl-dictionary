@@ -16,7 +16,7 @@ licence ([LICENSE](LICENSE)).
 | Source | What we use | Authors | Licence | Version used |
 |---|---|---|---|---|
 | [Polish Wiktionary (Wikisłownik)](https://pl.wiktionary.org/), via the [kaikki.org Polish extract](https://kaikki.org/dictionary/downloads/pl/) | English headwords with Polish definitions, register labels, example sentences with Polish translations, phrasal verbs | Wikisłownik contributors | CC BY-SA 4.0 | kaikki.org extract, published 2026-10-30 |
-| [English Wiktionary](https://en.wiktionary.org/), via the [kaikki.org English extract](https://kaikki.org/dictionary/English/) | English inflected forms, IPA, Polish translation tables | Wiktionary contributors | CC BY-SA 4.0 | kaikki.org extract, published 2026-10-30 |
+| [English Wiktionary](https://en.wiktionary.org/), via the [kaikki.org raw Wiktextract dump](https://kaikki.org/dictionary/rawdata.html) | English inflected forms, IPA, Polish translation tables | Wiktionary contributors | CC BY-SA 4.0 | kaikki.org raw dump, published 2026-10-30 |
 
 Individual entries correspond to the Wiktionary pages of the same title; the
 page history on Wiktionary lists the authors of each page.

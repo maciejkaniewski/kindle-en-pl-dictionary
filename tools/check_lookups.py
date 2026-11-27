@@ -10,8 +10,17 @@ Test file format (TSV, '#' comments):
     query<TAB>-                      the query must NOT resolve
     query<TAB>!other                 the query must resolve, but NOT to "other"
                                      (collisions: "saw" must open saw, not see)
+    query<TAB>~text                  (needs --src) the entry the query opens
+                                     contains "text", e.g. Polish<TAB>~polski
+
+With --src (the OPF/XHTML build directory), "given -> give" also passes when
+"given" opens its own entry that starts with the cross-reference "→ give"
+(used when the inflected form is a word of its own, e.g. the adjective "given").
 """
 import argparse
+import glob
+import html
+import os
 import re
 import subprocess
 import sys
@@ -25,12 +34,25 @@ def lookup(kindling, mobi, word):
     return int(m.group(1)) if res.returncode == 0 and m else None
 
 
+def load_src(src):
+    """headword (lower case) -> (headword, entry html) from the build sources."""
+    entries = {}
+    for path in sorted(glob.glob(os.path.join(src, "content*.html"))):
+        text = open(path, encoding="utf-8").read()
+        for e in re.findall(r"<idx:entry.*?</idx:entry>", text, re.S):
+            hw = html.unescape(re.search(r'<idx:orth value="([^"]*)"', e).group(1))
+            entries[hw.lower()] = (hw, e)
+    return entries
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("mobi")
     ap.add_argument("tests")
     ap.add_argument("--kindling", default="kindling-cli")
+    ap.add_argument("--src", help="build source dir, enables cross-reference checks")
     args = ap.parse_args()
+    src = load_src(args.src) if args.src else {}
 
     cache = {}
 
@@ -50,6 +72,11 @@ def main():
         if expected == "-":
             ok = got is None
             detail = "does not resolve" if ok else f"unexpectedly resolves (position {got})"
+        elif expected.startswith("~"):
+            text = expected[1:]
+            hit = src.get(query.lower())
+            ok = bool(hit) and got is not None and got == pos(hit[0]) and text in hit[1]
+            detail = f"entry contains {text!r}" if ok else f"entry for {query!r} lacks {text!r} (or query does not open it)"
         elif expected.startswith("!"):
             other = pos(expected[1:])
             ok = got is not None and other is not None and got != other
@@ -58,7 +85,14 @@ def main():
         else:
             want = pos(expected)
             ok = got is not None and got == want
-            detail = f"-> {expected}" if ok else f"position {got}, expected {expected} at {want}"
+            detail = f"-> {expected}"
+            if not ok and got is not None and query.lower() in src:
+                own_hw, entry = src[query.lower()]
+                xref = f"→ <b>{html.escape(expected, quote=True)}</b>"
+                if xref in entry and got == pos(own_hw):
+                    ok, detail = True, f"-> own entry '{own_hw}' with → {expected}"
+            if not ok:
+                detail = f"position {got}, expected {expected} at {want}"
         print(f"{'PASS' if ok else 'FAIL'}  {query!r:24} {detail}")
         failures += not ok
     print(f"\n{total - failures}/{total} passed")

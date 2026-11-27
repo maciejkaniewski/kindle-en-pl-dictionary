@@ -12,8 +12,8 @@ fetch() {  # url dest
 
 # Polish Wiktionary (English entries with Polish definitions)
 fetch https://kaikki.org/dictionary/downloads/pl/pl-extract.jsonl.gz data/raw/pl-extract.jsonl.gz
-# English Wiktionary, English entries (inflected forms, Polish translations)
-fetch https://kaikki.org/dictionary/English/kaikki.org-dictionary-English.jsonl.gz data/raw/kaikki-English.jsonl.gz
+# English Wiktionary, raw dump (~3 GB; English entries give inflected forms and Polish translations)
+fetch https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz data/raw/raw-wiktextract-data.jsonl.gz
 
 # kindling: MIT-licensed kindlegen replacement (https://github.com/ciscoriordan/kindling)
 case "$(uname -s)" in

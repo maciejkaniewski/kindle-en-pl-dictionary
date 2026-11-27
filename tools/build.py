@@ -34,7 +34,7 @@ PARTICLES = {
 POS_ORDER = ["verb", "noun", "adj", "adv", "pron", "prep", "conj", "det", "num",
              "intj", "particle", "phrase", "prep_phrase", "proverb"]
 
-MAX_LIST = 25           # max phrasal verbs / expressions listed under a headword
+MAX_LIST = 60           # max phrasal verbs / expressions listed under a headword
 MAX_EXAMPLES = 1        # examples shown per sense
 HINT_LEN = 60           # max length of the English sense hint
 
@@ -54,11 +54,11 @@ def shorten(s, n):
 def form_desc(tags):
     t = set(tags)
     if "past" in t and "participle" in t:
-        return "imiesłów bierny"
+        return "III forma"
     if "past" in t:
         return "czas przeszły"
     if "present" in t and "participle" in t:
-        return "forma -ing"
+        return "forma z -ing"
     if "third-person" in t or ("present" in t and "singular" in t):
         return "3. os. l. poj."
     if "plural" in t:
@@ -134,6 +134,28 @@ def load(records_path):
     return entries, lemma_forms, form_of_recs
 
 
+POSSESSIVES = ["my", "your", "his", "her", "its", "our", "their"]
+REFLEXIVES = ["myself", "yourself", "himself", "herself", "itself", "ourselves", "yourselves", "themselves"]
+
+
+def expand_placeholders(phrase):
+    """"make up one's mind" -> "make up my mind", "make up his mind", ...
+
+    Headwords with placeholders never occur verbatim in books; their real
+    variants are indexed as inflected forms instead.
+    """
+    variants = [[]]
+    for tok in phrase.replace("\u2019", "'").split(" "):
+        if tok in ("one's", "someone's", "somebody's"):
+            opts = POSSESSIVES
+        elif tok == "oneself":
+            opts = REFLEXIVES
+        else:
+            opts = [tok]
+        variants = [v + [o] for v in variants for o in opts]
+    return [" ".join(v) for v in variants] if len(variants) > 1 else []
+
+
 def verb_forms(lemma, lemma_forms):
     """Inflected forms of a single-word verb, keyed by tag tuple."""
     out = []
@@ -155,6 +177,14 @@ def merge(entries, lemma_forms, form_of_recs):
         for form, tags in verb_forms(parts[0], lemma_forms):
             lemma_forms[hw].append((" ".join([form] + parts[1:]), tags))
 
+    for hw in headwords:
+        if " " not in hw:
+            continue
+        extra = [(v, ()) for v in expand_placeholders(hw)]
+        for form, tags in list(lemma_forms.get(hw, ())):
+            extra += [(v, tags) for v in expand_placeholders(form)]
+        lemma_forms[hw].extend(extra)
+
     # 2. form -> lemmas
     form_lemmas = defaultdict(lambda: defaultdict(set))
     for lemma in headwords:
@@ -168,8 +198,9 @@ def merge(entries, lemma_forms, form_of_recs):
 
     # 3. attach forms: plain inflection, or "→ lemma" line on a separate entry
     collisions = 0
+    hw_lower = {h.lower() for h in headwords}
     for form, lemmas in form_lemmas.items():
-        if form in headwords or len(lemmas) > 1:
+        if form.lower() in hw_lower or len(lemmas) > 1:
             target = entries.setdefault(form, Entry(form))
             for lemma, tagsets in lemmas.items():
                 descs = target.form_of.setdefault(lemma, set())
@@ -185,21 +216,60 @@ def merge(entries, lemma_forms, form_of_recs):
 
     final = {hw: e for hw, e in entries.items() if e.has_senses() or e.form_of}
 
-    # 4. phrasal verbs and expressions under their first word
+    # 4. fold spellings that differ only in case ("may" + "May", "polish" +
+    #    "Polish") into one entry: the Kindle prefers an exact-case match, so a
+    #    sentence-initial "May" would otherwise open the month, not the verb.
+    groups = defaultdict(list)
+    for hw in final:
+        groups[hw.lower()].append(hw)
+    for variants in groups.values():
+        if len(variants) < 2:
+            continue
+        variants.sort(key=lambda h: (h != h.lower(), h))
+        primary = final[variants[0]]
+        for v in variants[1:]:
+            e = final.pop(v)
+            known = {s["gloss"] for b in primary.blocks.values() for s in b["pl"] + b["en"]}
+            for pos, b in e.blocks.items():
+                # drop senses the primary spelling already has ("YOLO" vs "yolo")
+                pl = [s for s in b["pl"] if s["gloss"] not in known]
+                en = [s for s in b["en"] if s["gloss"] not in known]
+                if pl or en:
+                    primary.blocks[f"{v}|{pos}"] = dict(b, pl=pl, en=en, variant=v)
+            for f, t in e.forms.items():
+                primary.forms[f] |= t
+            for lemma, d in e.form_of.items():
+                primary.form_of.setdefault(lemma, set()).update(d)
+            primary.ipa = primary.ipa or e.ipa
+    by_lower = {hw.lower(): hw for hw in final}
+
+    # 5. phrasal verbs and expressions under their first word
     phrasal_of = defaultdict(list)
     expr_of = defaultdict(list)
     for hw in headwords:
         parts = hw.split(" ")
-        if len(parts) < 2 or parts[0] not in final:
+        base = by_lower.get(parts[0].lower())
+        if len(parts) < 2 or base is None or hw not in final:
             continue
         is_pv = all(p in PARTICLES for p in parts[1:]) and ("verb" in entries[hw].blocks or entries[hw].phrasal)
-        (phrasal_of if is_pv else expr_of)[parts[0]].append(hw)
-    return final, phrasal_of, expr_of, collisions
+        (phrasal_of if is_pv else expr_of)[base].append(hw)
+    return final, phrasal_of, expr_of, collisions, by_lower
 
 
 # --- rendering ----------------------------------------------------------------
 
-DESC_ORDER = ["czas przeszły", "imiesłów bierny", "forma -ing", "3. os. l. poj.", "l. mn.", "st. wyższy", "st. najwyższy"]
+DESC_ORDER = ["czas przeszły", "III forma", "forma z -ing", "3. os. l. poj.", "l. mn.", "st. wyższy", "st. najwyższy"]
+
+
+QUALIFIER = re.compile(r"^([^:;,()]{2,40}):\s+(?=\S)")
+
+
+def render_gloss(gloss):
+    """Italicise a leading usage note such as 'w brydżu:' or 'o człowieku:'."""
+    m = QUALIFIER.match(gloss)
+    if m and len(m.group(1).split()) <= 5:
+        return f"<i>{esc(m.group(1))}:</i> {esc(gloss[m.end():])}"
+    return esc(gloss)
 
 
 def render_senses(block):
@@ -209,7 +279,7 @@ def render_senses(block):
     for s in block["pl"]:
         n += 1
         labels = f' <i>{esc(", ".join(s["labels"]))}</i>' if s["labels"] else ""
-        line = f"<b>{n}.</b>{labels} {esc(s['gloss'])}"
+        line = f"<b>{n}.</b>{labels} {render_gloss(s['gloss'])}"
         for en, pl in s["examples"][:MAX_EXAMPLES]:
             line += f"<br/>&#160;&#160;▸ <i>{esc(en)}</i> – {esc(pl)}"
         out.append(f"<p>{line}</p>")
@@ -226,7 +296,7 @@ def render_senses(block):
     return out
 
 
-def render_entry(e, entries, phrasal_of, expr_of):
+def render_entry(e, entries, phrasal_of, expr_of, by_lower):
     iforms = sorted(f for f in e.forms if f.lower() != e.hw.lower())
     infl = ""
     if iforms:
@@ -238,9 +308,10 @@ def render_entry(e, entries, phrasal_of, expr_of):
 
     for lemma, descs in e.form_of.items():
         d = ", ".join(sorted(descs, key=lambda x: DESC_ORDER.index(x) if x in DESC_ORDER else 99))
-        pos = "verb" if descs & {"czas przeszły", "imiesłów bierny", "forma -ing", "3. os. l. poj."} else (
+        pos = "verb" if descs & {"czas przeszły", "III forma", "forma z -ing", "3. os. l. poj."} else (
             "noun" if "l. mn." in descs else None)
-        gloss = entries[lemma].first_gloss(pos) if lemma in entries else None
+        target = by_lower.get(lemma.lower())
+        gloss = entries[target].first_gloss(pos) if target else None
         line = f"→ <b>{esc(lemma)}</b>"
         if d:
             line += f" <i>({esc(d)})</i>"
@@ -248,12 +319,21 @@ def render_entry(e, entries, phrasal_of, expr_of):
             line += f": {esc(shorten(gloss, 70))}"
         body.append(f"<p>{line}</p>")
 
+    # Capitalised variants folded into this entry ("Polish" in "polish") get a
+    # one-line summary near the top, so the popup shows both meanings.
+    seen = set()
+    for block in e.blocks.values():
+        v = block.get("variant")
+        if not v or v in seen:
+            continue
+        seen.add(v)
+        first = (block["pl"] + block["en"])[0]["gloss"] if (block["pl"] or block["en"]) else None
+        if first:
+            body.append(f"<p><b>{esc(v)}</b> <i>({esc(block['label'])})</i>: {esc(shorten(first, 70))}</p>")
+
     pv = sorted(phrasal_of.get(e.hw, []))
     if pv:
         body.append("<p><i>czasowniki frazowe:</i> " + " · ".join(f"<b>{esc(p)}</b>" for p in pv[:MAX_LIST]) + "</p>")
-    ex = sorted(expr_of.get(e.hw, []))
-    if ex:
-        body.append("<p><i>wyrażenia:</i> " + " · ".join(esc(p) for p in ex[:MAX_LIST]) + "</p>")
 
     def pos_key(item):
         pos = item[0]
@@ -263,8 +343,18 @@ def render_entry(e, entries, phrasal_of, expr_of):
         senses = render_senses(block)
         if not senses:
             continue
-        body.append(f"<p><i>{esc(block['label'])}</i></p>")
+        if block.get("variant"):
+            body.append(f"<p><b>{esc(block['variant'])}</b> – <i>{esc(block['label'])}</i></p>")
+        else:
+            body.append(f"<p><i>{esc(block['label'])}</i></p>")
         body.extend(senses)
+
+    # Expressions go last: they are reference material, while the phrasal-verb
+    # list stays on top for split phrasal verbs ("gave it up").
+    ex = sorted(expr_of.get(e.hw, []))
+    if ex:
+        more = f" (+{len(ex) - MAX_LIST})" if len(ex) > MAX_LIST else ""
+        body.append("<p><i>zwroty:</i> " + " · ".join(esc(p) for p in ex[:MAX_LIST]) + more + "</p>")
 
     return '<idx:entry name="default" scriptable="yes" spell="yes">\n' + "\n".join(body) + "\n</idx:entry>\n"
 
@@ -280,6 +370,9 @@ XHTML_HEAD = """<?xml version="1.0" encoding="utf-8"?>
 
 def write_package(outdir, title, entries_html, meta):
     os.makedirs(outdir, exist_ok=True)
+    for old in os.listdir(outdir):  # stale chunks from a previous, larger build
+        if re.fullmatch(r"content\d+\.html", old):
+            os.remove(os.path.join(outdir, old))
     files = []
     chunk, size, idx = [], 0, 0
 
@@ -305,23 +398,27 @@ def write_package(outdir, title, entries_html, meta):
 
     today = meta["date"]
     with open(os.path.join(outdir, "usage.html"), "w", encoding="utf-8") as f:
-        f.write(XHTML_HEAD.format(title="Jak korzystać") + f"""<h1>{esc(title)}</h1>
-<p>Słownik angielsko-polski zbudowany z otwartych danych Wikisłownika (pl.wiktionary.org) i Wiktionary (en.wiktionary.org).</p>
-<h2>Jak korzystać</h2>
-<p><b>Pojedyncze słowo:</b> przytrzymaj palec na słowie. Formy odmienione (np. <i>gave</i>, <i>went</i>, <i>children</i>) prowadzą do formy podstawowej.</p>
-<p><b>Czasowniki frazowe:</b> zaznacz całe wyrażenie, przeciągając palcem (np. <i>gave up</i>, <i>put up with</i>). Jeśli wyrażenie jest rozdzielone (<i>gave it up</i>), dotknij czasownika — lista czasowników frazowych jest na początku hasła.</p>
-<p>Ustawienia: Ustawienia → Język i słowniki → Słowniki → angielski → wybierz ten słownik.</p>
+        f.write(XHTML_HEAD.format(title="Jak korzystać ze słownika") + f"""<h1>{esc(title)}</h1>
+<p>Słownik angielsko-polski oparty na otwartych danych z polskiego i angielskiego Wikisłownika (pl.wiktionary.org, en.wiktionary.org).</p>
+<h2>Jak korzystać ze słownika</h2>
+<p><b>Pojedyncze słowa.</b> Przytrzymaj palec na słowie. Formy odmienione, np. <i>gave</i>, <i>went</i> czy <i>children</i>, prowadzą do hasła z formą podstawową.</p>
+<p><b>Czasowniki frazowe.</b> Zaznacz palcem całe wyrażenie, np. <i>gave up</i> albo <i>put up with</i>. Jeśli czasownik i partykułę rozdzielają inne słowa (<i>gave it up</i>), przytrzymaj palec na samym czasowniku: jego czasowniki frazowe są wymienione na początku hasła.</p>
+<p><b>Słownik domyślny.</b> Na czytniku wejdź w Settings → Language &amp; Dictionaries → Dictionaries → English i wybierz ten słownik.</p>
+<h2>Skróty</h2>
+<p>amer. – amerykański • arch. – archaiczny • bryt. – brytyjski • daw. – dawniej • dosł. – dosłownie • eufem. – eufemistyczny • form. – formalny • gw. – gwarowy • iron. – ironiczny • książk. – książkowy • l. mn. – liczba mnoga • obraźl. – obraźliwy • oficj. – oficjalny • pejor. – pejoratywny • poet. – poetycki • pot. – potoczny • przen. – przenośnie • przest. – przestarzały • rzad. – rzadki • st. wyższy, st. najwyższy – stopień wyższy, najwyższy • wulg. – wulgarny • zdrobn. – zdrobnienie • żart. – żartobliwy • 3. os. l. poj. – 3. osoba liczby pojedynczej • III forma – imiesłów czasu przeszłego (past participle) • forma z -ing – imiesłów czynny (present participle)</p>
 </body></html>
 """)
     with open(os.path.join(outdir, "copyright.html"), "w", encoding="utf-8") as f:
         f.write(XHTML_HEAD.format(title="Licencja i źródła") + f"""<h1>Licencja i źródła</h1>
-<p>Treść słownika jest dostępna na licencji <b>Creative Commons Uznanie autorstwa – Na tych samych warunkach 4.0</b> (CC BY-SA 4.0), https://creativecommons.org/licenses/by-sa/4.0/</p>
-<p>Źródła:</p>
-<p>• Wikisłownik (pl.wiktionary.org), autorzy: społeczność Wikisłownika, dane przetworzone przez Wiktextract / kaikki.org</p>
-<p>• Wiktionary (en.wiktionary.org), authors: Wiktionary contributors, data extracted by Wiktextract / kaikki.org</p>
-<p>Tatu Ylonen, "Wiktextract: Wiktionary as Machine-Readable Structured Data", LREC 2022.</p>
-<p>Zmiany: wybór i scalenie haseł, odmiana form, formatowanie. Wersja z {today}.</p>
-<p>Projekt: https://github.com/maciejkaniewski/kindle-en-pl-dictionary (kod: licencja MIT).</p>
+<p>Treść słownika jest udostępniona na licencji Creative Commons Uznanie autorstwa – Na tych samych warunkach 4.0 Międzynarodowe (CC BY-SA 4.0): https://creativecommons.org/licenses/by-sa/4.0/deed.pl</p>
+<p>Możesz ją kopiować, zmieniać i rozpowszechniać, także w celach komercyjnych, pod warunkiem że podasz autorów i udostępnisz swoją wersję na tej samej licencji.</p>
+<h2>Źródła</h2>
+<p>• Polski Wikisłownik (pl.wiktionary.org) – autorzy: społeczność Wikisłownika</p>
+<p>• Angielski Wikisłownik (en.wiktionary.org) – autorzy: społeczność Wiktionary</p>
+<p>Dane z obu serwisów wyodrębniono narzędziem Wiktextract (kaikki.org): Tatu Ylonen, „Wiktextract: Wiktionary as Machine-Readable Structured Data”, LREC 2022.</p>
+<h2>Zmiany</h2>
+<p>Hasła z obu źródeł zostały wybrane, połączone i na nowo sformatowane. Dodano angielskie formy odmienione, odsyłacze (np. <i>saw</i> → <i>see</i>) oraz listy czasowników frazowych.</p>
+<p>Wersja z dnia {today}. Strona projektu: https://github.com/maciejkaniewski/kindle-en-pl-dictionary (kod źródłowy na licencji MIT).</p>
 </body></html>
 """)
 
@@ -334,7 +431,7 @@ def write_package(outdir, title, entries_html, meta):
     spine.append('<itemref idref="copyright"/>')
     manifest.append('<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>')
 
-    nav = [("usage.html", "Jak korzystać"), (files[0], "Słownik"), ("copyright.html", "Licencja i źródła")]
+    nav = [("usage.html", "Jak korzystać ze słownika"), (files[0], "Słownik"), ("copyright.html", "Licencja i źródła")]
     points = "\n".join(
         f'  <navPoint id="n{i}" playOrder="{i + 1}"><navLabel><text>{esc(label)}</text></navLabel>'
         f'<content src="{href}"/></navPoint>' for i, (href, label) in enumerate(nav))
@@ -394,9 +491,9 @@ def main():
     args = ap.parse_args()
 
     entries, lemma_forms, form_of_recs = load(args.records)
-    final, phrasal_of, expr_of, collisions = merge(entries, lemma_forms, form_of_recs)
+    final, phrasal_of, expr_of, collisions, by_lower = merge(entries, lemma_forms, form_of_recs)
 
-    htmls = [render_entry(final[hw], final, phrasal_of, expr_of)
+    htmls = [render_entry(final[hw], final, phrasal_of, expr_of, by_lower)
              for hw in sorted(final, key=lambda h: (h.lower(), h))]
     meta = {"date": datetime.date.today().isoformat(), "identifier": args.identifier,
             "publisher": args.publisher}

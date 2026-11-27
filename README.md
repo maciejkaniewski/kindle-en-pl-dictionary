@@ -5,12 +5,13 @@ from [Wiktionary](https://www.wiktionary.org/), with **phrasal verbs and
 inflected forms that you can actually look up**: *gave up*, *woke up*,
 *looked forward to*, *put up with*.
 
-> 🇵🇱 **Po polsku:** darmowy słownik angielsko-polski do Kindle z czasownikami
-> frazowymi. [Instrukcja instalacji po polsku ↓](#-po-polsku)
+> 🇵🇱 **Po polsku:** darmowy słownik angielsko-polski na czytniki Kindle, który
+> rozpoznaje czasowniki frazowe. [Opis i instrukcja instalacji ↓](#-po-polsku)
 
-> **Status: early development.** A 32-entry pilot is being tested on a
-> Kindle Paperwhite. The full dictionary (~100k headwords) is in progress and
-> will be published under [Releases](../../releases).
+> **Status: early development.** The full dictionary (108,000 entries,
+> 124,000 inflected forms) builds and passes 171 automated lookup tests. It is
+> now being tested on a Kindle Paperwhite. There is no release yet; it will be
+> published under [Releases](../../releases).
 
 ## Why another dictionary?
 
@@ -48,14 +49,15 @@ Linux, use your file manager (gvfs) or `jmtpfs`.
 
 ## Building from source
 
-Requirements: Linux or macOS, Python 3.10+, `curl`, about 1 GB of disk space.
+Requirements: Linux or macOS, Python 3.10+, `curl`, about 4 GB of disk space.
 
 ```sh
-tools/download.sh   # Wiktionary extracts from kaikki.org (~670 MB) + kindling
-make test-pilot     # build the pilot dictionary and run the lookup tests
+tools/download.sh   # Wiktionary data from kaikki.org (~3.2 GB) + kindling
+make test           # build the full dictionary (~5 min) and run the lookup tests
 ```
 
-The output is written to `build/pilot/en-pl-pilot.mobi`.
+The output is written to `build/full/kindle-en-pl-dictionary.mobi`.
+`make test-pilot` builds a small 32-entry dictionary from `pilot/words.txt`.
 
 How it works:
 
@@ -67,13 +69,13 @@ How it works:
    and compiles a `.mobi` with
    [kindling](https://github.com/ciscoriordan/kindling).
 3. `tools/check_lookups.py` uses kindling's on-device lookup simulator to check
-   that, for example, *gave up* opens *give up* (`tests/lookups_pilot.tsv`).
+   that, for example, *gave up* opens *give up* (`tests/lookups.tsv`).
 
 ## Roadmap
 
 - [x] Pilot: 32 entries, phrasal verbs, inflections, collision handling
+- [x] Full build from the complete Wiktionary data (108k entries)
 - [ ] Device test on a Kindle Paperwhite (tap and multi-word selection)
-- [ ] Full build from the complete Wiktionary data (~100k headwords)
 - [ ] GitHub Actions: build, test and publish releases
 - [ ] Fill gaps for missing phrasal verbs and idioms
 - [ ] Optional: Polish → English, and StarDict for KOReader / Kobo
@@ -88,25 +90,29 @@ How it works:
 
 ## 🇵🇱 Po polsku
 
-Darmowy, otwarty **słownik angielsko-polski do czytników Kindle**, zbudowany z
-danych Wikisłownika i Wiktionary. W odróżnieniu od wielu słowników wyszukuje
-**czasowniki frazowe** (*give up*, *put up with*, *look forward to*) również w
-formach odmienionych (*gave up*, *giving up*). Pod każdym czasownikiem
-podstawowym jest lista jego czasowników frazowych.
+Darmowy, otwarty **słownik angielsko-polski na czytniki Kindle**, oparty na
+danych z polskiego i angielskiego Wikisłownika. W przeciwieństwie do wielu
+innych słowników znajdziesz w nim **czasowniki frazowe** (*give up*, *put up
+with*, *look forward to*), także w formie odmienionej (*gave up*, *giving
+up*). Hasło każdego czasownika zaczyna się od listy powiązanych z nim
+czasowników frazowych.
 
-> **Status:** wczesna wersja. Pilot (32 hasła) jest testowany na Kindle
-> Paperwhite, a pełny słownik powstaje.
+> **Status:** słownik jest na wczesnym etapie. Pełna wersja (108 tys. haseł)
+> jest gotowa i przechodzi automatyczne testy, a teraz sprawdzamy ją na Kindle
+> Paperwhite. Pierwsze wydanie pojawi się w zakładce Releases.
 
 ### Instalacja
 
 1. Pobierz plik `kindle-en-pl-dictionary.mobi` z zakładki
    [Releases](../../releases).
-2. Podłącz Kindle kablem USB i skopiuj plik do folderu
-   `documents/dictionaries/`. **Nie używaj Send-to-Kindle**, bo psuje słowniki.
-3. Na Kindle: **Ustawienia → Język i słowniki → Słowniki → angielski** →
-   wybierz *Słownik angielsko-polski (Wiktionary)*.
-4. W angielskiej książce przytrzymaj palec na słowie albo zaznacz całe
-   wyrażenie, np. *gave up*.
+2. Podłącz czytnik do komputera kablem USB i skopiuj plik do folderu
+   `documents/dictionaries/`. **Nie wysyłaj go przez Send to Kindle**: usługa
+   konwertuje plik i słownik przestaje działać.
+3. Na czytniku wejdź w **Settings → Language & Dictionaries → Dictionaries →
+   English** i wybierz *Słownik angielsko-polski (Wiktionary)*.
+4. Otwórz książkę po angielsku i przytrzymaj palec na słowie albo zaznacz
+   całe wyrażenie, np. *gave up*.
 
-Treść słownika jest dostępna na licencji CC BY-SA 4.0 (autorzy: społeczność
-Wikisłownika i Wiktionary), a kod na licencji MIT.
+Treść słownika jest udostępniona na licencji CC BY-SA 4.0 (autorzy:
+społeczności polskiego i angielskiego Wikisłownika), a kod źródłowy na
+licencji MIT.
