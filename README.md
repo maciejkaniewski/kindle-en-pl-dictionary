@@ -11,11 +11,11 @@
 **Learn the phrases, not just the words.**
 
 You read books in English and want to keep learning as you read. Not only new
-words, but also phrasal verbs and idioms like *put up with* or *break the ice*.
+words, but also phrasal verbs and idioms like *put up with*, *break the ice* or *go bananas*.
 Kindle dictionaries rarely find those, so this English–Polish dictionary gives
 each of them an entry of its own.
 
-<img src="docs/images/hero.png" alt="Looking up “gave”, “broke the ice” and “saw” on a Kindle" width="100%">
+<img src="docs/images/hero.png" alt="Looking up “gave”, “broke the ice” and “went bananas” on a Kindle" width="100%">
 
 </div>
 
@@ -32,7 +32,7 @@ each of them an entry of its own.
 <p align="center">
   <img src="docs/images/looking-forward-to.png" alt="looking forward to" width="49%">
   <img src="docs/images/mice.png" alt="mice" width="49%">
-  <img src="docs/images/went.png" alt="went" width="49%">
+  <img src="docs/images/saw.png" alt="saw" width="49%">
   <img src="docs/images/may.png" alt="May" width="49%">
 </p>
 

@@ -23,13 +23,13 @@ import tempfile
 CASES = [
     ("gave", "She gave me her old bike.", "gave", "give"),
     ("broke-the-ice", "His joke broke the ice.", "broke the ice", "break the ice"),
+    ("went-bananas", "The fans went bananas.", "went bananas", "go bananas"),
     ("saw", "I saw him yesterday.", "saw", "saw"),
     ("looking-forward-to", "I am looking forward to the holidays.", "looking forward to", "look forward to"),
     ("mice", "Two mice ran under the table.", "mice", "mouse"),
-    ("went", "We went home early.", "went", "go"),
     ("may", "May I come in?", "May", "may"),
 ]
-HERO = ["gave", "broke-the-ice", "saw"]
+HERO = ["gave", "broke-the-ice", "went-bananas"]
 
 CSS = """
 body { margin: 0; background: #ffffff; font-family: 'DejaVu Sans', sans-serif; }
