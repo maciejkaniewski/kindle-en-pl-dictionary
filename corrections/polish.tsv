@@ -1,0 +1,71 @@
+headword	original	corrected	status	source	note
+a	Aby zapisać się na ten kurs wymagana jest dobra znajomość chińskiego.	Aby zapisać się na ten kurs, trzeba dobrze znać chiński.	pending	ai	missing comma; more natural
+all	Wszyscy gracze już mają żółte kartki.	Wszyscy zawodnicy mają już żółte kartki.	pending	ai	word order; "zawodnicy"
+and	Kup mi trochę mleka i chleb.	Kup mi mleko i chleb.	pending	ai	mixed cases (mleka / chleb)
+and	Probowałem i próbowałem, nigdy z sukcesem.	Próbowałem i próbowałem, ale bez skutku.	pending	ai	typo "Probowałem"; calque
+and	Ucz się a zdasz.	Ucz się, a zdasz.	pending	ai	missing comma
+as	Ci, co chcą naszej porażki będą szczęśliwi.	Ci, którzy życzą nam porażki, będą zadowoleni.	pending	ai	missing comma; more natural
+as	On śpi gdy pada deszcz.	On śpi, kiedy pada deszcz.	pending	ai	missing comma
+as	Porywacze uwolnili go tak jak uzgodniono.	Porywacze uwolnili go, tak jak uzgodniono.	pending	ai	missing comma
+as	To nie jest tak skomplikowane jak oczekiwałem.	To nie jest tak skomplikowane, jak się spodziewałem.	pending	ai	missing comma; "oczekiwałem" calque
+as	W miarę jak rósł mój lęk, moje nogi stawały się ciężkie.	Im bardziej się bałem, tym cięższe stawały się moje nogi.	pending	ai	clumsy
+but	To jest tylko chłopiec!	To tylko chłopiec!	pending	ai	more natural
+by	Będę w domu przed piątą.	Będę w domu najpóźniej o piątej.	pending	ai	"by five" = not later than five
+by	Nie można podzielić 50 (pięćdziesięciu) przez 7 (siedem) bez reszty.	50 nie dzieli się przez 7 bez reszty.	pending	ai	clumsy
+by	Potrzebuję kawałek drewna o wymiarach 5 na 9 stóp.	Potrzebuję kawałka drewna o wymiarach 5 na 9 stóp.	pending	ai	genitive after "potrzebować"
+by	Samochód był prowadzony przez pijanego kierowcę.	Samochód prowadził pijany kierowca.	pending	ai	passive calque
+can	Proszę trzy puszki Coli.	Poproszę trzy puszki coli.	pending	ai	more natural
+for	Wyjął nóż i pobiegł w moją stronę.	Wyjął nóż i rzucił się na mnie.	pending	ai	"ran for me" = attacked me
+for	Został ponownie wybrany posłem reprezentującym Colchester.	Ponownie został wybrany na posła z Colchester.	pending	ai	more natural
+have	(My) piszemy książkę. Gdyby maszyna do pisania nie była zepsuta, mielibyśmy już ją napisaną.	Piszemy książkę. Gdyby maszyna do pisania nie była zepsuta, już byśmy ją skończyli.	pending	ai	calque "mielibyśmy ją napisaną"
+have	(Ta) apteczka zawiera mnóstwo strzykawek.	W apteczce jest mnóstwo strzykawek.	pending	ai	more natural
+have	Niech on zaczeka! Kazałem naprawić (mój) samochód.	Niech zostanie! Oddałem samochód do naprawy.	pending	ai	"stay" = zostać
+if	Był świetnym przyjacielem, chociaż trochę skąpym w knajpie.	Był świetnym przyjacielem, choć w barze trochę skąpił.	pending	ai	clumsy
+in	Czy jest tam (w środku) pan Smith?	Czy pan Smith jest u siebie?	pending	ai	calque
+in	Mniej wody dostanie się w ten sposób do wnętrza twoich butów.	W ten sposób mniej wody dostanie się do butów.	pending	ai	clumsy "do wnętrza twoich butów"
+in	Mój tłuszcz zwija się w fałdy.	Tłuszcz układa mi się w fałdy.	pending	ai	calque
+in	Odszedł w gniewie.	Odszedł wściekły.	pending	ai	calque "w gniewie"
+in	Spódniczki są modne w tym roku.	W tym roku modne są spódnice.	pending	ai	word order
+in	Wymieniając uszczelki w kranie czuł, że robi coś dla środowiska.	Wymieniając uszczelki w kranie, czuł, że robi coś dla środowiska.	pending	ai	missing comma after participle clause
+in	Wziął po rodzicach władzę w firmie.	Rodzice załatwili mu wejście do tej firmy.	pending	ai	wrong meaning: "an in" = a way in, connection
+in	jeden z miliona	Jeden na milion.	pending	ai	Polish idiom is "jeden na milion"
+in	za dwa miesiące	za dwa tygodnie	pending	ai	wrong: weeks, not months
+it	Ona to ma! // Tak, kochanie, ona to ma. // Cóż, jestem twoją Wenus // jestem twoim ogniem, w twoim pożądaniu.	-	pending	ai	broken example (English text is just ".")
+it	Po odliczeniu, szukający mówi głośno „Gotowi czy nie, nadchodzę!”, albo „Idę, gotowi czy nie!” i próbuje znaleźć wszystkich ukrytych graczy.	Po odliczeniu szukający woła: „Kto się nie schował, ten kryje!” i próbuje znaleźć wszystkich ukrytych graczy.	pending	ai	use the Polish hide-and-seek call
+it	Te tenisówki włoskiego wykonania szybko stały się modnymi butami i ten trend nie zamierza zniknąć w najbliższym czasie.	Te włoskie tenisówki szybko stały się hitem i nic nie wskazuje na to, że ta moda szybko minie.	pending	ai	calque "trend nie zamierza zniknąć"
+it	To koniec — nie idę z tobą do żadnych kolejnych sklepów ze słodyczami.	Dość tego — już nigdy nie pójdę z tobą do sklepu ze słodyczami.	pending	ai	more natural
+it	To pośród ludzi czułem się samotny.	Samotny czułem się właśnie wśród ludzi.	pending	ai	cleft-sentence calque
+more	Barman! Jeszcze jedno ale, proszę!	Barman! Jeszcze jedno piwo, proszę!	pending	ai	"ale" is confusing in Polish
+not	Umiesz to zrobić, czy nie?	Umiesz to zrobić czy nie?	pending	ai	no comma before "czy" here
+of	Drzewa wypuszczają liście na wiosnę, zrzucają je na jesieni, pozostając bez liści w zimie.	Drzewa wypuszczają liście wiosną, a jesienią je zrzucają, więc zimą stoją bez liści.	pending	ai	clumsy participle
+of	Miasto, słynne z Bitwy pod Hastings, jest położone 54 mile na południowy wschód od Londynu.	Miasto, słynne z bitwy pod Hastings, leży 54 mile na południowy wschód od Londynu.	pending	ai	"bitwy" lower case; more natural
+on	Drinki są na mój koszt, chłopaki.	Dziś ja stawiam, chłopaki.	pending	ai	calque
+on	No dalej, jesteśmy spóźnieni!	No chodź, jesteśmy już spóźnieni!	pending	ai	more natural
+on	Zaraz po wejściu Jacka, William wstał do wyjścia.	Gdy tylko Jack wszedł, William wstał, żeby wyjść.	pending	ai	calque; comma
+on	Żyli z dziesięciu dolarów tygodniowo.	Żyli za dziesięć dolarów tygodniowo.	pending	ai	"żyć za X", not "z X"
+one	Tamten samochód to jest właśnie to — Kupię go.	To jest właśnie ten samochód — kupuję go.	pending	ai	calque
+one	Ten, kto przynosi wiadomość, to kurier. lub Osoba, która przekazuje wiadomość, to kurier.	Ten, kto przynosi wiadomość, to kurier.	pending	ai	stray alternative "lub …"
+other	To jest niezła bluzka, ale również ta druga jest ciekawa.	Ładna koszula, ale ta druga też jest niezła.	pending	ai	shirt = koszula; more natural
+search	Psy szukające i ratownicze zapewniają ludziom niezbędną pomoc w czasie kryzysu.	Psy poszukiwawczo-ratownicze są nieocenioną pomocą w sytuacjach kryzysowych.	pending	ai	calque
+search	We Francji, prezydent Nicolas Sarkozy szukając populistycznego pobudzenia w obliczu jego słabnącego politycznego powodzenia, rozpoczął kampanię gniewnej krytyki (…) przeciw mniejszości romskiej.	We Francji prezydent Nicolas Sarkozy, szukając populistycznego sposobu na poprawę słabnących notowań, rozpoczął kampanię gniewnej krytyki (…) wymierzoną w mniejszość romską.	pending	ai	calque; punctuation
+search	Żołnierze rozeszli się na mniejsze szwadrony w celu przeszukania budynku.	Żołnierze podzielili się na mniejsze oddziały, żeby przeszukać budynek.	pending	ai	more natural
+that	Powiedziałem, że nie chcę pojechać do babci!	Powiedziałem, że nie chcę jechać do babci!	pending	ai	aspect
+that	Ta propozycja, o której mówiliśmy, nie jest już dostępna.	Oferta, o której mówiliśmy, jest już nieaktualna.	pending	ai	more natural
+the	Bogaci bogacą się a biedni biednieją.	Bogaci się bogacą, a biedni biednieją.	pending	ai	missing comma before "a"
+the	Grasz na pianine?	Grasz na pianinie?	pending	ai	typo
+the	Im cieplej tym lepiej.	Im cieplej, tym lepiej.	pending	ai	missing comma
+the	Nakarm głodnego, ubierz nagiego.	Nakarm głodnych, przyodziej nagich.	pending	ai	"the hungry/the naked" are plural
+the	To był trudny czas, ale jestem tym mądrzejszy dzięki temu.	To był trudny czas, ale dzięki niemu jestem mądrzejszy.	pending	ai	redundant "tym… dzięki temu"
+the	rządzą Anglikami.	Windsorowie rządzą Anglikami.	pending	ai	missing subject
+this	Nie spodziewałem się, że twój samochód jest taki szybki.	Nie spodziewałem się, że twój samochód jest aż tak szybki.	pending	ai	"this fast" = aż tak
+to	Dała to mi.	Dała mi to.	pending	ai	word order
+to	Ku mojemu zdziwieniu, nie pojawił się.	Ku mojemu zdziwieniu nie pojawił się.	pending	ai	no comma after introductory phrase
+to	Odlicz od jeden do dziesięciu.	Policz od jednego do dziesięciu.	pending	ai	"od jeden" is ungrammatical
+to	Poszedłem na zakupy, żeby kupić trochę pieczywa.	Poszedłem do sklepu kupić chleb.	pending	ai	redundant "na zakupy, żeby kupić"
+to	Proszę popchnąć drzwi do pozycji przymkniętej.	Proszę przymknąć drzwi.	pending	ai	calque
+to	Zmieniłem moje mieszkanie na nowe.	Zamieniłem mieszkanie na nowe.	pending	ai	more natural
+US	Amerykański prezydent spotkał się dziś z premierem brytyjskim.	Prezydent USA spotkał się dziś z brytyjskim premierem.	pending	ai	more natural
+will	Masz przestać hałasować!	Przestaniesz wreszcie hałasować?!	pending	ai	more natural
+will	Nuci swoje ulubione melodie kiedy gotuje.	Gotując, zwykle nuci swoje ulubione melodie.	pending	ai	missing comma; habitual "will"
+you	(Czy) chcielibyście państwo coś do picia?	Napiją się państwo czegoś?	pending	ai	more natural
+your	Czy to twoje pióro? Nie zapomnij wziąć swojego parasola ze sobą.	Czy to twoje pióro? Nie zapomnij zabrać parasola.	pending	ai	redundant "swojego… ze sobą"

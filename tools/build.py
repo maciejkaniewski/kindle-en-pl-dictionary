@@ -108,12 +108,36 @@ class Entry:
         return None
 
 
-def load(records_path):
+def apply_corrections(r, corrections, used):
+    """Replace Polish text that has an approved correction (corrections/polish.tsv)."""
+    hw = r["hw"]
+    for s in r["senses"]:
+        key = (hw, s["gloss"])
+        if key in corrections:
+            s["gloss"] = corrections[key]
+            used.add(key)
+        examples = []
+        for en, pl in s["examples"]:
+            key = (hw, pl)
+            if key in corrections:
+                used.add(key)
+                if corrections[key] == "-":
+                    continue  # example removed
+                pl = corrections[key]
+            examples.append([en, pl])
+        s["examples"] = examples
+
+
+def load(records_path, corrections=None):
     entries = {}
     lemma_forms = defaultdict(list)   # lemma -> [(form, tags)]
     form_of_recs = []                 # (form, lemma, tags)
+    corrections = corrections or {}
+    used = set()
     for line in open(records_path, encoding="utf-8"):
         r = json.loads(line)
+        if corrections:
+            apply_corrections(r, corrections, used)
         e = entries.setdefault(r["hw"], Entry(r["hw"]))
         if r["ipa"] and (e.ipa is None or r["src"] == "plwikt"):
             e.ipa = r["ipa"]
@@ -131,7 +155,7 @@ def load(records_path):
             lemma_forms[r["hw"]].append((form, tuple(tags)))
         for lemma, tags in r["form_of"]:
             form_of_recs.append((r["hw"], lemma, tuple(tags)))
-    return entries, lemma_forms, form_of_recs
+    return entries, lemma_forms, form_of_recs, used
 
 
 POSSESSIVES = ["my", "your", "his", "her", "its", "our", "their"]
@@ -486,11 +510,20 @@ def main():
     ap.add_argument("--title", default="Słownik angielsko-polski (Wiktionary)")
     ap.add_argument("--identifier", default="kindle-en-pl-dictionary")
     ap.add_argument("--publisher", default="kindle-en-pl-dictionary")
+    ap.add_argument("--corrections", default=os.path.join(os.path.dirname(__file__), "..", "corrections", "polish.tsv"),
+                    help="TSV of corrections; only rows with status 'approved' are applied")
     ap.add_argument("--kindling", help="path to kindling-cli; if given, compile the .mobi")
     ap.add_argument("-o", "--output", help="output .mobi path (with --kindling)")
     args = ap.parse_args()
 
-    entries, lemma_forms, form_of_recs = load(args.records)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # -I drops the script dir
+    from corrections import load_approved
+    corrections = load_approved(args.corrections)
+    entries, lemma_forms, form_of_recs, used = load(args.records, corrections)
+    stale = set(corrections) - used
+    print(f"corrections applied: {len(used)}/{len(corrections)}", file=sys.stderr)
+    for hw, original in sorted(stale):
+        print(f"warning: stale correction (text no longer in source): {hw}: {original}", file=sys.stderr)
     final, phrasal_of, expr_of, collisions, by_lower = merge(entries, lemma_forms, form_of_recs)
 
     htmls = [render_entry(final[hw], final, phrasal_of, expr_of, by_lower)

@@ -1,30 +1,36 @@
 # kindle-en-pl-dictionary
 
-Free, open-source **English → Polish dictionary for Kindle** e-readers, built
-from [Wiktionary](https://www.wiktionary.org/), with **phrasal verbs and
-inflected forms that you can actually look up**: *gave up*, *woke up*,
-*looked forward to*, *put up with*.
+An **English → Polish dictionary for Kindle** e-readers, built from
+[Wiktionary](https://www.wiktionary.org/).
 
-> 🇵🇱 **Po polsku:** darmowy słownik angielsko-polski na czytniki Kindle, który
-> rozpoznaje czasowniki frazowe. [Opis i instrukcja instalacji ↓](#-po-polsku)
+> 🇵🇱 Słownik angielsko-polski na czytniki Kindle.
+> [Opis i instrukcja instalacji ↓](#-po-polsku)
 
 > **Status: early development.** The full dictionary (108,000 entries,
 > 124,000 inflected forms) builds and passes 171 automated lookup tests. It is
 > now being tested on a Kindle Paperwhite. There is no release yet; it will be
 > published under [Releases](../../releases).
 
-## Why another dictionary?
+## Features
 
-Many Kindle dictionaries list phrasal verbs only *inside* the entry of the
-base verb. The Kindle searches **only** the dictionary's index of headwords and
-their inflected forms, so:
+- **108,000 entries** with Polish definitions and example sentences from the
+  Polish and English Wiktionary
+- **Inflected forms:** tapping *went*, *children* or *better* opens *go*,
+  *child* and *good*
+- **Phrasal verbs as entries of their own**, inflected forms included:
+  selecting *gave up* opens *give up*
+- **Phrasal verbs listed at the top of every verb entry**, which also covers
+  split ones like *gave it up*
+- **Words that are also inflections** show both meanings: *saw* gives *piła*
+  and "→ see"
 
-- selecting *gave up* finds nothing, because neither "give up" nor "gave up" is
-  in the index;
-- tapping *gave* opens *give*, but *give up* is buried at the end of a long
-  entry that the popup does not show.
+## How lookup works
 
-This dictionary fixes both:
+The Kindle only searches a dictionary's index of headwords and their inflected
+forms. A phrasal verb that appears only inside the entry of its base verb
+cannot be found by selecting it, and the popup rarely shows the end of a long
+entry. This dictionary therefore indexes phrasal verbs on their own and lists
+them at the top of the verb entry:
 
 | You do on the Kindle | You get |
 |---|---|
@@ -71,6 +77,14 @@ How it works:
 3. `tools/check_lookups.py` uses kindling's on-device lookup simulator to check
    that, for example, *gave up* opens *give up* (`tests/lookups.tsv`).
 
+## Corrections
+
+The Polish text comes from Wiktionary and is sometimes clumsy. Corrections
+live in [`corrections/polish.tsv`](corrections/polish.tsv), one row per change,
+and are applied at build time once their status is `approved`. Suggestions made
+with the help of AI are marked `ai` and stay `pending` until a person has
+reviewed them.
+
 ## Roadmap
 
 - [x] Pilot: 32 entries, phrasal verbs, inflections, collision handling
@@ -90,12 +104,18 @@ How it works:
 
 ## 🇵🇱 Po polsku
 
-Darmowy, otwarty **słownik angielsko-polski na czytniki Kindle**, oparty na
-danych z polskiego i angielskiego Wikisłownika. W przeciwieństwie do wielu
-innych słowników znajdziesz w nim **czasowniki frazowe** (*give up*, *put up
-with*, *look forward to*), także w formie odmienionej (*gave up*, *giving
-up*). Hasło każdego czasownika zaczyna się od listy powiązanych z nim
-czasowników frazowych.
+Słownik angielsko-polski na czytniki Kindle, oparty na danych z polskiego i
+angielskiego Wikisłownika.
+
+### Funkcje
+
+- **108 tys. haseł** z polskimi znaczeniami i przykładami użycia
+- **Formy odmienione:** *went*, *children* czy *better* prowadzą do haseł
+  *go*, *child* i *good*
+- **Czasowniki frazowe jako osobne hasła**, także w formie odmienionej:
+  zaznaczenie *gave up* otwiera hasło *give up*
+- **Lista czasowników frazowych na początku hasła każdego czasownika**, co
+  pomaga też przy rozdzielonych wyrażeniach, np. *gave it up*
 
 > **Status:** słownik jest na wczesnym etapie. Pełna wersja (108 tys. haseł)
 > jest gotowa i przechodzi automatyczne testy, a teraz sprawdzamy ją na Kindle
