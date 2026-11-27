@@ -16,7 +16,9 @@ Record schema:
    "senses": [{"gloss": str, "labels": [str], "en": str|None,
                "examples": [[en, pl], ...]}],
    "forms": [[form, [tags]]],          # inflected forms of this headword
-   "form_of": [[lemma, [tags]]]}       # this headword is an inflection of lemma
+   "form_of": [[lemma, [tags]]],       # this headword is an inflection of lemma
+   "n_langs": int}                     # (English Wiktionary only) number of languages
+                                       # it is translated into, a popularity proxy
 """
 import argparse
 import gzip
@@ -229,6 +231,9 @@ def extract_enwikt(path, wanted):
             trs = list(d.get("translations", []))
             for s in d.get("senses", []):
                 trs.extend(s.get("translations", []) or ())
+            # Popularity proxy: common words and phrases are translated into
+            # many languages ("go out": 92, "go forth": a handful).
+            n_langs = len({t.get("lang_code") for t in trs if t.get("lang_code")})
             for t in trs:
                 if t.get("lang_code") != "pl" or not t.get("word"):
                     continue
@@ -269,7 +274,7 @@ def extract_enwikt(path, wanted):
                 "hw": hw, "src": "enwikt", "pos": d.get("pos") or "",
                 "pos_label": POS_PL.get(d.get("pos"), d.get("pos") or ""),
                 "ipa": ipa, "phrasal": phrasal, "senses": senses,
-                "forms": forms, "form_of": form_of,
+                "forms": forms, "form_of": form_of, "n_langs": n_langs,
             }
 
 

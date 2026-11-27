@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+<head><meta name="dtb:uid" content="kindle-en-pl-dictionary-device-test"/></head>
+<docTitle><text>Dictionary test</text></docTitle>
+<navMap>
+  <navPoint id="n0" playOrder="1"><navLabel><text>Dictionary test</text></navLabel><content src="dictionary-test.html"/></navPoint>
+</navMap>
+</ncx>

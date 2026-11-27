@@ -8,7 +8,7 @@ ENWIKT   ?= data/raw/raw-wiktextract-data.jsonl.gz
 PILOT := build/pilot
 FULL  := build/full
 
-.PHONY: all download pilot test-pilot full test clean
+.PHONY: all download pilot test-pilot full test test-book clean
 
 all: test
 
@@ -47,3 +47,11 @@ test: full
 
 clean:
 	rm -rf build
+
+# Small English test book for checking lookups on a real Kindle
+# (copy it to documents/ on the device, next to the dictionary in documents/dictionaries/).
+build/device/dictionary-test.azw3: tests/device/dictionary-test.opf tests/device/dictionary-test.html tests/device/toc.ncx
+	@mkdir -p build/device
+	$(KINDLING) build tests/device/dictionary-test.opf -o $@ --no-validate  # a test book needs no cover
+
+test-book: build/device/dictionary-test.azw3

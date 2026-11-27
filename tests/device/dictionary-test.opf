@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="uid">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+    <dc:title>Dictionary test (kindle-en-pl-dictionary)</dc:title>
+    <!-- Lookup only uses an English dictionary when the book language is English. -->
+    <dc:language>en</dc:language>
+    <dc:creator>kindle-en-pl-dictionary</dc:creator>
+    <dc:identifier id="uid">kindle-en-pl-dictionary-device-test</dc:identifier>
+  </metadata>
+  <manifest>
+    <item id="text" href="dictionary-test.html" media-type="application/xhtml+xml"/>
+    <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+  <spine toc="ncx">
+    <itemref idref="text"/>
+  </spine>
+</package>

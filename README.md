@@ -19,8 +19,9 @@ An **English → Polish dictionary for Kindle** e-readers, built from
   *child* and *good*
 - **Phrasal verbs as entries of their own**, inflected forms included:
   selecting *gave up* opens *give up*
-- **Phrasal verbs listed at the top of every verb entry**, which also covers
-  split ones like *gave it up*
+- **Clean entries in the style of the Oxford Dictionary of English:**
+  meanings with inline examples first, then the most common phrasal verbs and
+  idioms of the word, each with a short translation
 - **Words that are also inflections** show both meanings: *saw* gives *piła*
   and "→ see"
 
@@ -30,11 +31,11 @@ The Kindle only searches a dictionary's index of headwords and their inflected
 forms. A phrasal verb that appears only inside the entry of its base verb
 cannot be found by selecting it, and the popup rarely shows the end of a long
 entry. This dictionary therefore indexes phrasal verbs on their own and lists
-them at the top of the verb entry:
+the most common ones in the verb entry:
 
 | You do on the Kindle | You get |
 |---|---|
-| tap **gave** | *give*, with **give up · give in · give out …** listed at the top |
+| tap **gave** | *give* (gave, given), with *give up, give back, give in…* in its phrasal-verb section |
 | select **gave up** / **giving up** | the *give up* entry |
 | tap **saw** | *saw* (piła) **and** "→ see (czas przeszły)" |
 | tap **children**, **went**, **woke** | *child*, *go*, *wake* |
@@ -114,8 +115,9 @@ angielskiego Wikisłownika.
   *go*, *child* i *good*
 - **Czasowniki frazowe jako osobne hasła**, także w formie odmienionej:
   zaznaczenie *gave up* otwiera hasło *give up*
-- **Lista czasowników frazowych na początku hasła każdego czasownika**, co
-  pomaga też przy rozdzielonych wyrażeniach, np. *gave it up*
+- **Przejrzyste hasła wzorowane na Oxford Dictionary of English:** najpierw
+  znaczenia z przykładami, potem najczęstsze czasowniki frazowe i idiomy danego
+  słowa, każdy z krótkim tłumaczeniem
 
 > **Status:** słownik jest na wczesnym etapie. Pełna wersja (108 tys. haseł)
 > jest gotowa i przechodzi automatyczne testy, a teraz sprawdzamy ją na Kindle
